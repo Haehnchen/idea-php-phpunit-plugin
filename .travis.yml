@@ -1,4 +1,5 @@
-sudo: false
+root: false
+os: linux
 language: java
 dist: trusty
 jdk:
@@ -17,7 +18,7 @@ env:
   - PHPSTORM_ENV=2017.3.2 IDEA_ENV=2017.3.7
   - PHPSTORM_ENV=eap      IDEA_ENV=eap
 
-matrix:
+jobs:
   allow_failures:
     - env: PHPSTORM_ENV=eap      IDEA_ENV=eap
     
