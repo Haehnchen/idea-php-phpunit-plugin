@@ -14,10 +14,19 @@ before_script:
  - chmod +x travis.sh
 
 env:
-  - PHPSTORM_ENV=2017.3.2
-  - PHPSTORM_ENV=eap
-  - IDEA_ENV=2017.3.7
+  - PHPSTORM_ENV=2017.3.2 IDEA_ENV=2017.3.7
+  - PHPSTORM_ENV=eap      IDEA_ENV=eap
 
 matrix:
   allow_failures:
     - env: PHPSTORM_ENV=eap
+    
+jobs:
+  include:
+  - name: "EAP"
+    python: "3.5"
+    env: TEST_SUITE=suite_3_5_unit
+
+  - name: "3.5 Unit Test"
+    python: "3.5"
+    env: TEST_SUITE=suite_3_5_unit
