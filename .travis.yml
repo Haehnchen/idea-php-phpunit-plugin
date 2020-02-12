@@ -1,4 +1,3 @@
-root: false
 os: linux
 language: java
 dist: trusty
