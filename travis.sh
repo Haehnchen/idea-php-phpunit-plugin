@@ -1,10 +1,10 @@
 #!/bin/bash
 
 ideaVersion="2017.3"
-if [ "$PHPSTORM_ENV" == "2017.3.2" ]; then
-    ideaVersion="2017.3.2"
-elif [ "$PHPSTORM_ENV" == "eap" ]; then
+if [ "$IDEA_ENV" == "eap" ]; then
     ideaVersion="163.5644.15"
+else
+    ideaVersion="$IDEA_ENV"
 fi
 
 travisCache=".cache"
@@ -54,23 +54,16 @@ if [ -d ./plugins ]; then
   echo "created plugin dir"  
 fi
 
-if [ "$PHPSTORM_ENV" == "2017.3.2" ]; then
-
+if [ "$PHPSTORM_ENV" == "eap" ]; then
     #php
-    download "http://phpstorm.espend.de/files/proxy/phpstorm-2017.3.2-php.zip"
-    unzip -qo $travisCache/phpstorm-2017.3.2-php.zip -d ./plugins
+    PHPSTORM_URL=$(curl -sS "https://plugins.jetbrains.com/api/plugins/6610/updates?channel=&size=100" | jq '.[]|[.compatibleVersions.IDEA, .file]|select(.[0]|endswith("(eap)"))|.[1]' --raw-output)
+    curl -o php.zip "https://plugins.jetbrains.com/files/$PHPSTORM_URL"
+    unzip -qo php.zip -d ./plugins
 
-elif [ "$PHPSTORM_ENV" == "eap" ]; then
-
+elif [ "$PHPSTORM_ENV" == "2017.3.2" ]; then
     #php
-    download "https://plugins.jetbrains.com/files/6610/28510/php-163.4830.18.zip"
-    unzip -qo $travisCache/php-163.4830.18.zip -d ./plugins
-
-    # TODO: extract latest builds for plugins from eap site they are not public
-    # https://confluence.jetbrains.com/display/PhpStorm/PhpStorm+Early+Access+Program
-    # echo "No configuration for PhpStorm: $PHPSTORM_ENV"
-    # exit 1
-
+    download "https://plugins.jetbrains.com/files/6610/41723/php-173.4127.29.zip"
+    unzip -qo $travisCache/php-173.4127.29.zip -d ./plugins
 else
     echo "Unknown PHPSTORM_ENV value: $PHPSTORM_ENV"
     exit 1
