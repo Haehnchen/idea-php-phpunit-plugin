@@ -19,14 +19,5 @@ env:
 
 matrix:
   allow_failures:
-    - env: PHPSTORM_ENV=eap
+    - env: PHPSTORM_ENV=eap      IDEA_ENV=eap
     
-jobs:
-  include:
-  - name: "EAP"
-    python: "3.5"
-    env: TEST_SUITE=suite_3_5_unit
-
-  - name: "3.5 Unit Test"
-    python: "3.5"
-    env: TEST_SUITE=suite_3_5_unit
