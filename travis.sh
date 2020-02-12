@@ -2,7 +2,7 @@
 
 ideaVersion="2017.3"
 if [ "$IDEA_ENV" == "eap" ]; then
-    ideaVersion="163.5644.15"
+    ideaVersion="201.4865.12"
 else
     ideaVersion="$IDEA_ENV"
 fi
