@@ -14,8 +14,9 @@ before_script:
  - chmod +x travis.sh
 
 env:
-  - PHPSTORM_ENV=2017.3.7
+  - PHPSTORM_ENV=2017.3.2
   - PHPSTORM_ENV=eap
+  - IDEA_ENV=2017.3.7
 
 matrix:
   allow_failures:
