@@ -198,7 +198,7 @@ Examples
 
 ![PHPUnit Prophecy](https://jetbrains-plugins.s3.amazonaws.com/9674/screenshot_16953.png)
 
-![PHPUnitExpected exception](https://download.plugins.jetbrains.com/9674/screenshot_17449.png)
+![PHPUnitExpected exception](https://plugins.jetbrains.com/files/9674/screenshot_17449.png)
 
 ![Mockery Support](https://plugins.jetbrains.com/files/9674/screenshot_8dc4aac6-3194-4799-b889-7475e7f2e7ff)
 
