@@ -1,7 +1,7 @@
 <idea-plugin url="https://github.com/Haehnchen/idea-php-phpunit-plugin">
     <id>de.espend.idea.php.phpunit</id>
     <name>PHPUnit Enhancement</name>
-    <version>6.0</version>
+    <version>6.1</version>
     <vendor email="daniel@espendiller.net" url="http://espend.de?p=de.espend.idea.php.phpunit">espend_de</vendor>
 
     <description><![CDATA[

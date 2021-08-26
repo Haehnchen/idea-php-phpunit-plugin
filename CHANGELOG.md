@@ -7,6 +7,9 @@
 * 2.x: PhpStorm 2017.1+ (no support)
 * 1.x: PhpStorm 2016.1+ (no support)
 
+## 6.1
+* Removed incorrect short name for Mockery Inspection (Joseph Lawson)
+
 ## 6.0
 * migrate to github action (Daniel Espendiller)
 * Updated README detailing Mockery support. Updated plugin.xml to mention new Mockery support features in feature list (Joseph Lawson)
