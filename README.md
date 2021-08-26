@@ -200,6 +200,10 @@ Examples
 
 ![PHPUnitExpected exception](https://download.plugins.jetbrains.com/9674/screenshot_17449.png)
 
+![Mockery Support](https://plugins.jetbrains.com/files/9674/screenshot_8dc4aac6-3194-4799-b889-7475e7f2e7ff)
+
+![Mockery Support](https://plugins.jetbrains.com/files/9674/screenshot_d44c8d9b-3038-4ece-80f1-f88f3b3ea84a)
+
 ## Mockery
 
 Has support for
