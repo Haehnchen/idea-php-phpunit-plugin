@@ -108,7 +108,7 @@
             <descriptionDirectoryName>MethodExceptionIntentionAction</descriptionDirectoryName>
         </intentionAction>
 
-        <localInspection language="PHP" groupPath="PHP, Mockery Inspections"
+        <localInspection language="PHP" groupPath="PHP" shortName="ReplaceLegacyMockeryInspection"
                          displayName="Replace legacy Mockery syntax" groupName="Mockery" enabledByDefault="true" level="WARNING"
                          implementationClass="de.espend.idea.php.phpunit.inspection.ReplaceLegacyMockeryInspection"/>
 
