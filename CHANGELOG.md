@@ -7,6 +7,9 @@
 * 2.x: PhpStorm 2017.1+ (no support)
 * 1.x: PhpStorm 2016.1+ (no support)
 
+## 6.2
+* fix "ReplaceLegacyMockeryInspection" short naming (Daniel Espendiller)
+
 ## 6.1
 * Removed incorrect short name for Mockery Inspection (Joseph Lawson)
 
