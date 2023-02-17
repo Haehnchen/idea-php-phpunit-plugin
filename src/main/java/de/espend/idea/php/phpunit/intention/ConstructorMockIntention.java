@@ -2,6 +2,7 @@ package de.espend.idea.php.phpunit.intention;
 
 import com.intellij.codeInsight.intention.HighPriorityAction;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
+import com.intellij.codeInsight.intention.preview.IntentionPreviewUtils;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
@@ -49,18 +50,25 @@ public class ConstructorMockIntention extends PsiElementBaseIntentionAction impl
                         continue;
                     }
 
-                    WriteCommandAction.runWriteCommandAction(
-                        psiElement.getProject(),
-                        getText(),
-                        "",
-                        new MyConstructorCommandActionArgument(
-                            psiElement,
-                            PsiTreeUtil.getChildOfType(newExpression, ParameterList.class),
-                            constructor,
-                            newExpression
-                        ),
-                        psiElement.getContainingFile()
+                    MyConstructorCommandActionArgument runnable = new MyConstructorCommandActionArgument(
+                        psiElement,
+                        PsiTreeUtil.getChildOfType(newExpression, ParameterList.class),
+                        constructor,
+                        newExpression
                     );
+
+                    // support cross API version compatibility
+                    if (IntentionPreviewUtils.isPreviewElement(psiElement)) {
+                        runnable.run();
+                    } else {
+                        WriteCommandAction.runWriteCommandAction(
+                            psiElement.getProject(),
+                            getText(),
+                            "",
+                            runnable,
+                            psiElement.getContainingFile()
+                        );
+                    }
 
                     return;
                 }
