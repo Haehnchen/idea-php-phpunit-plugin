@@ -2,21 +2,23 @@ package de.espend.idea.php.phpunit.intention;
 
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
+import com.intellij.codeInsight.intention.preview.IntentionPreviewUtils;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiRecursiveElementVisitor;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.ui.components.JBList;
 import com.intellij.util.IncorrectOperationException;
 import com.jetbrains.php.codeInsight.PhpScopeHolder;
 import com.jetbrains.php.lang.inspections.PhpThrownExceptionsAnalyzer;
 import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.MethodReference;
 import com.jetbrains.php.phpunit.PhpUnitUtil;
+import de.espend.idea.php.phpunit.PhpUnitIcons;
 import de.espend.idea.php.phpunit.utils.PhpUnitPluginUtil;
 import one.util.streamex.StreamEx;
 import org.apache.commons.lang.StringUtils;
@@ -24,15 +26,14 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import javax.swing.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * @author Daniel Espendiller <daniel@espendiller.net>
  */
-public class MethodExceptionIntentionAction extends PsiElementBaseIntentionAction {
+public class MethodExceptionIntentionAction extends PsiElementBaseIntentionAction implements Iconable {
     @Override
     public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement psiElement) throws IncorrectOperationException {
         Method method = getMethodScope(psiElement);
@@ -42,21 +43,30 @@ public class MethodExceptionIntentionAction extends PsiElementBaseIntentionActio
 
         Collection<String> exceptions = getException(method);
         if(exceptions.size() == 0) {
-            HintManager.getInstance().showErrorHint(editor, "No exception in method scope found");
+            if (!IntentionPreviewUtils.isPreviewElement(psiElement)) {
+                HintManager.getInstance().showErrorHint(editor, "No exception in method scope found");
+            }
 
             return;
         }
 
-        final JBList<String> list = new JBList<>(exceptions);
+        if (IntentionPreviewUtils.isPreviewElement(psiElement) || exceptions.size() == 1) {
+            PhpUnitPluginUtil.insertExpectedException(editor.getDocument(), method, exceptions.iterator().next());
 
-        JBPopupFactory.getInstance().createListPopupBuilder(list)
+            return;
+        }
+
+        final List<String> list = new ArrayList<>(exceptions);
+
+        JBPopupFactory.getInstance().createPopupChooserBuilder(list)
             .setTitle("PHPUnit: Select Exception")
-            .setItemChoosenCallback(() -> new WriteCommandAction.Simple(editor.getProject(), "PHPUnit: expectedException Insert") {
-                @Override
-                protected void run() {
-                    PhpUnitPluginUtil.insertExpectedException(editor.getDocument(), method, list.getSelectedValue());
-                }
-            }.execute())
+            .setItemSelectedCallback(s -> WriteCommandAction.runWriteCommandAction(
+                psiElement.getProject(),
+                getText(),
+                "",
+                () -> PhpUnitPluginUtil.insertExpectedException(editor.getDocument(), method, s),
+                psiElement.getContainingFile()
+            ))
             .createPopup()
             .showInBestPositionFor(editor);
     }
@@ -95,7 +105,7 @@ public class MethodExceptionIntentionAction extends PsiElementBaseIntentionActio
 
         psiElement.acceptChildren(new PsiRecursiveElementVisitor() {
             @Override
-            public void visitElement(PsiElement element) {
+            public void visitElement(@NotNull PsiElement element) {
                 if(element instanceof MethodReference) {
                     methodReferences.add((MethodReference) element);
                 }
@@ -111,6 +121,11 @@ public class MethodExceptionIntentionAction extends PsiElementBaseIntentionActio
                 .map(phpType -> StringUtils.stripStart(phpType.toString(), "\\"))
                 .filter(s -> !s.toLowerCase().contains("phpunit"))
                 .sorted()
-                .collect(Collectors.toCollection(HashSet::new));
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    @Override
+    public Icon getIcon(int flags) {
+        return PhpUnitIcons.PHPUNIT;
     }
 }
