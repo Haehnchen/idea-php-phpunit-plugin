@@ -1,26 +1,29 @@
 package de.espend.idea.php.phpunit.intention;
 
 import com.intellij.codeInsight.hint.HintManager;
+import com.intellij.codeInsight.intention.HighPriorityAction;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
+import com.intellij.codeInsight.intention.preview.IntentionPreviewUtils;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.ui.components.JBList;
 import com.intellij.util.IncorrectOperationException;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.PhpPsiElementFactory;
 import com.jetbrains.php.lang.psi.elements.*;
+import de.espend.idea.php.phpunit.PhpUnitIcons;
 import de.espend.idea.php.phpunit.utils.processor.MethodReferenceNameProcessor;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Set;
-import java.util.TreeSet;
+import javax.swing.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -29,40 +32,65 @@ import java.util.stream.Collectors;
  *
  * @author Daniel Espendiller <daniel@espendiller.net>
  */
-public class AddMockMethodIntention extends PsiElementBaseIntentionAction {
+public class AddMockMethodIntention extends PsiElementBaseIntentionAction implements Iconable, HighPriorityAction {
     @Override
     public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement psiElement) throws IncorrectOperationException {
         String parameter = getMockInstanceFromMethodReferenceScope(psiElement);
 
         if(parameter == null) {
-            HintManager.getInstance().showErrorHint(editor, "No mock context found");
+            if (!IntentionPreviewUtils.isPreviewElement(psiElement)) {
+                HintManager.getInstance().showErrorHint(editor, "No mock context found");
+            }
+
             return;
         }
 
         Set<String> methods = new TreeSet<>();
         for (PhpClass phpClass : PhpIndex.getInstance(psiElement.getProject()).getAnyByFQN(parameter)) {
             methods.addAll(phpClass.getMethods().stream()
-                .filter(method -> method.getAccess().isPublic() && !method.getName().startsWith("__"))
+                .filter(method -> method.getAccess().isPublic() && !method.getName().startsWith("__") && !method.isStatic() && !method.isFinal())
                 .map(PhpNamedElement::getName).collect(Collectors.toSet())
             );
         }
 
         if(methods.size() == 0) {
-            HintManager.getInstance().showErrorHint(editor, "No public method found");
+            if (!IntentionPreviewUtils.isPreviewElement(psiElement)) {
+                HintManager.getInstance().showErrorHint(editor, "No public method found");
+            }
+
+            return;
+        }
+
+        if (IntentionPreviewUtils.isPreviewElement(psiElement)) {
+            new MyMockWriteCommand(editor, methods, psiElement, false).run();
+
             return;
         }
 
         // Single item direct execution without selection
         if(methods.size() == 1) {
-            new MyMockWriteCommand(editor, methods.iterator().next(), psiElement).execute();
+            WriteCommandAction.runWriteCommandAction(
+                psiElement.getProject(),
+                getText(),
+                "",
+                new MyMockWriteCommand(editor, new ArrayList<>(methods), psiElement, true),
+                psiElement.getContainingFile()
+            );
+
             return;
         }
 
-        final JBList<String> list = new JBList<>(methods);
+        final List<String> list = new ArrayList<>(methods);
 
-        JBPopupFactory.getInstance().createListPopupBuilder(list)
+        JBPopupFactory.getInstance().createPopupChooserBuilder(list)
             .setTitle("PHPUnit: Mock Method")
-            .setItemChoosenCallback(() -> new MyMockWriteCommand(editor, list.getSelectedValue(), psiElement).execute())
+            .setItemsChosenCallback(strings -> WriteCommandAction.runWriteCommandAction(
+                psiElement.getProject(),
+                getText(),
+                "",
+                new MyMockWriteCommand(editor, new ArrayList<>(strings), psiElement, true),
+                psiElement.getContainingFile()
+            ))
             .createPopup()
             .showInBestPositionFor(editor);
 
@@ -115,25 +143,25 @@ public class AddMockMethodIntention extends PsiElementBaseIntentionAction {
         return true;
     }
 
-    private static class MyMockWriteCommand extends WriteCommandAction.Simple {
+    private static class MyMockWriteCommand implements Runnable {
         @NotNull
         private final Editor editor;
 
         @NotNull
-        private final String selectedValue;
+        private final Collection<String> selectedValues;
 
         @NotNull
         private final PsiElement psiElement;
+        private final boolean jumpToLastElement;
 
-        private MyMockWriteCommand(@NotNull Editor editor, @NotNull String selectedValue, @NotNull PsiElement psiElement) {
-            super(editor.getProject(), "Add method mock");
+        private MyMockWriteCommand(@NotNull Editor editor, @NotNull Collection<String> selectedValues, @NotNull PsiElement psiElement, boolean jumpToLastElement) {
             this.editor = editor;
-            this.selectedValue = selectedValue;
+            this.selectedValues = selectedValues;
             this.psiElement = psiElement;
+            this.jumpToLastElement = jumpToLastElement;
         }
 
-        @Override
-        protected void run() {
+        public void run() {
             Statement statement = PsiTreeUtil.getParentOfType(psiElement, Statement.class);
             if(statement == null) {
                 HintManager.getInstance().showErrorHint(editor, "No mock context found");
@@ -149,25 +177,41 @@ public class AddMockMethodIntention extends PsiElementBaseIntentionAction {
             // $foobar
             String prefix = childOfAnyType.getText();
 
-            Statement methodReference = PhpPsiElementFactory.createStatement(
-                psiElement.getProject(),
-                String.format("%s->method('%s')->willReturn();", prefix, selectedValue)
-            );
+            PsiElement elementJumpTo = null;
 
-            PsiElement add = statement.add(methodReference);
+            for (String selectedValue : selectedValues) {
+                Project project = psiElement.getProject();
 
-            for (MethodReference reference : PsiTreeUtil.getChildrenOfTypeAsList(add, MethodReference.class)) {
-                if(!"willReturn".equals(reference.getName())) {
-                    continue;
-                }
+                Statement methodReference = PhpPsiElementFactory.createStatement(
+                    project,
+                    String.format("%s->method('%s')->willReturn();", prefix, selectedValue)
+                );
 
-                PsiElement lastChild = reference.getLastChild();
-                if(lastChild != null) {
-                    editor.getCaretModel().moveToOffset(lastChild.getTextRange().getStartOffset());
-                    editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
-                }
-                return;
+                elementJumpTo = statement.add(methodReference);
+                statement.add(PhpPsiElementFactory.createNewLine(project));
             }
+
+            if (this.jumpToLastElement && elementJumpTo != null) {
+                for (MethodReference reference : PsiTreeUtil.getChildrenOfTypeAsList(elementJumpTo, MethodReference.class)) {
+                    if(!"willReturn".equals(reference.getName())) {
+                        continue;
+                    }
+
+                    PsiElement lastChild = reference.getLastChild();
+                    if(lastChild != null) {
+                        editor.getCaretModel().moveToOffset(lastChild.getTextRange().getStartOffset());
+                        editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+                    }
+
+                    break;
+                }
+            }
+
         }
+    }
+
+    @Override
+    public Icon getIcon(int flags) {
+        return PhpUnitIcons.PHPUNIT;
     }
 }
