@@ -84,6 +84,8 @@
 
         <codeInsight.lineMarkerProvider language="PHP" implementationClass="de.espend.idea.php.phpunit.linemarker.RelatedTestCaseLineMarkerProvider"/>
 
+        <errorHandler implementation="de.espend.idea.php.phpunit.ide.PluginErrorReporterSubmitter"/>
+
         <intentionAction>
             <className>de.espend.idea.php.phpunit.intention.TestRunIntentionAction</className>
             <category>PHPUnit</category>
