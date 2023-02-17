@@ -1,23 +1,30 @@
 package de.espend.idea.php.phpunit.intention;
 
+import com.intellij.codeInsight.intention.HighPriorityAction;
 import com.intellij.codeInsight.intention.PsiElementBaseIntentionAction;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiDocumentManager;
+import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.jetbrains.php.PhpIndex;
+import com.jetbrains.php.lang.lexer.PhpTokenTypes;
+import com.jetbrains.php.lang.parser.PhpElementTypes;
+import com.jetbrains.php.lang.psi.PhpPsiElementFactory;
+import com.jetbrains.php.lang.psi.PhpPsiUtil;
 import com.jetbrains.php.lang.psi.elements.*;
 import com.jetbrains.php.lang.psi.resolve.types.PhpType;
+import de.espend.idea.php.phpunit.PhpUnitIcons;
 import de.espend.idea.php.phpunit.utils.PhpElementsUtil;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +32,7 @@ import java.util.stream.Collectors;
 /**
  * @author Daniel Espendiller <daniel@espendiller.net>
  */
-public class ConstructorMockIntention extends PsiElementBaseIntentionAction {
+public class ConstructorMockIntention extends PsiElementBaseIntentionAction implements Iconable, HighPriorityAction {
     @Override
     public void invoke(@NotNull Project project, Editor editor, @NotNull PsiElement psiElement) throws IncorrectOperationException {
         NewExpression newExpression = getScopeForOperation(psiElement);
@@ -42,14 +49,18 @@ public class ConstructorMockIntention extends PsiElementBaseIntentionAction {
                         continue;
                     }
 
-                    // execute string insertions and stop iteration
-                    new MyConstructorCommandActionArgument(
-                        psiElement,
-                        PsiTreeUtil.getChildOfType(newExpression, ParameterList.class),
-                        constructor,
-                        newExpression,
-                        editor
-                    ).execute();
+                    WriteCommandAction.runWriteCommandAction(
+                        psiElement.getProject(),
+                        getText(),
+                        "",
+                        new MyConstructorCommandActionArgument(
+                            psiElement,
+                            PsiTreeUtil.getChildOfType(newExpression, ParameterList.class),
+                            constructor,
+                            newExpression
+                        ),
+                        psiElement.getContainingFile()
+                    );
 
                     return;
                 }
@@ -106,10 +117,15 @@ public class ConstructorMockIntention extends PsiElementBaseIntentionAction {
         return newExpression;
     }
 
+    @Override
+    public Icon getIcon(int flags) {
+        return PhpUnitIcons.PHPUNIT;
+    }
+
     /**
      * new Foobar($this->createMock(Foobar::class))
      */
-    private static class MyConstructorCommandActionArgument extends WriteCommandAction.Simple {
+    private static class MyConstructorCommandActionArgument implements Runnable {
         @NotNull
         private final PsiElement scope;
 
@@ -122,21 +138,15 @@ public class ConstructorMockIntention extends PsiElementBaseIntentionAction {
         @NotNull
         private final NewExpression newExpression;
 
-        @NotNull
-        private final Editor editor;
-
-        private MyConstructorCommandActionArgument(@NotNull PsiElement scope, @Nullable ParameterList parameterList, @NotNull Method method, @NotNull NewExpression newExpression, @NotNull Editor editor) {
-            super(scope.getProject(), scope.getContainingFile());
+        private MyConstructorCommandActionArgument(@NotNull PsiElement scope, @Nullable ParameterList parameterList, @NotNull Method method, @NotNull NewExpression newExpression) {
             this.scope = scope;
             this.parameterList = parameterList;
             this.method = method;
             this.newExpression = newExpression;
-            this.editor = editor;
         }
 
         @Override
-        protected void run() throws Throwable {
-
+        public void run() {
             // current parameter state
             PsiElement[] parameters = parameterList != null ? parameterList.getParameters() : new PsiElement[0];
             int length = parameters.length;
@@ -160,12 +170,6 @@ public class ConstructorMockIntention extends PsiElementBaseIntentionAction {
                 }
             }
 
-            PsiDocumentManager.getInstance(scope.getProject())
-                .doPostponedOperationsAndUnblockDocument(editor.getDocument());
-
-            PsiDocumentManager.getInstance(scope.getProject())
-                .commitDocument(editor.getDocument());
-
             List<String> collect = classes
                 .stream()
                 .map(type -> {
@@ -175,6 +179,10 @@ public class ConstructorMockIntention extends PsiElementBaseIntentionAction {
 
                         if(s1.equalsIgnoreCase("\\int")) {
                             return "-1";
+                        } else if(s1.equalsIgnoreCase("\\float")) {
+                            return "0.0";
+                        } else if(s1.equalsIgnoreCase("\\array")) {
+                            return "[]";
                         } else if(s1.equalsIgnoreCase("\\bool") || s1.equalsIgnoreCase("\\boolean")) {
                             return "true";
                         }
@@ -188,26 +196,11 @@ public class ConstructorMockIntention extends PsiElementBaseIntentionAction {
                 .collect(Collectors.toList());
 
             String insert = StringUtils.join(collect, ", ");
+            ParameterList argumentList = PhpPsiElementFactory.createArgumentList(scope.getProject(), insert);
 
-            // condition for new Foobar() and new Foobar
-            int startOffset;
-            if(parameterList != null) {
-                startOffset = parameterList.getTextRange().getStartOffset();
-
-                // we already have a parameter so append string
-                if(length > 0) {
-                    PsiElement parameter = parameters[parameters.length - 1];
-                    startOffset = parameter.getTextRange().getEndOffset();
-
-                    insert = ", " + insert;
-                }
-            } else {
-                // new Foobar we need wrap parameter with "()"
-                startOffset = newExpression.getTextRange().getEndOffset();
-                insert = "(" + insert + ")";
+            for (PsiElement parameter : argumentList.getParameters()) {
+                appendParameterToNewExpression(newExpression, parameter);
             }
-
-            editor.getDocument().insertString(startOffset, insert);
 
             PsiElement statement = newExpression.getParent();
 
@@ -216,6 +209,23 @@ public class ConstructorMockIntention extends PsiElementBaseIntentionAction {
                 statement.getTextRange().getStartOffset(),
                 statement.getTextRange().getEndOffset() + insert.length()
             );
+        }
+    }
+
+    private static void appendParameterToNewExpression(@NotNull NewExpression function, @NotNull PsiElement psiElement) {
+        PsiElement parameterList = PhpPsiUtil.getChildOfType(function, PhpElementTypes.PARAMETER_LIST);
+
+        if (parameterList == null) {
+            PsiElement psiElement1 = function.addAfter(PhpPsiElementFactory.createFromText(psiElement.getProject(), PhpTokenTypes.chLPAREN, "new Foo()"), function.getLastChild());
+            parameterList = function.addAfter(PhpPsiElementFactory.createParameterList(psiElement.getProject(), "new Foo()"), psiElement1);
+            function.addAfter(PhpPsiElementFactory.createFromText(psiElement.getProject(), PhpTokenTypes.chRPAREN, "new Foo()"), parameterList);
+        }
+
+        PsiElement lastChild = parameterList.getLastChild();
+        if (lastChild == null) {
+            parameterList.add(psiElement);
+        } else {
+            parameterList.addAfter(psiElement, parameterList.addAfter(PhpPsiElementFactory.createComma(parameterList.getProject()), lastChild));
         }
     }
 }
