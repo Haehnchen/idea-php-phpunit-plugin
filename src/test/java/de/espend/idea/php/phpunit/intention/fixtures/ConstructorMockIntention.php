@@ -36,7 +36,7 @@ namespace Foo
 
     class BarPrimitives
     {
-        public function __construct(string $foo1, int $foo2, bool $foo4, Car $car)
+        public function __construct(string $foo1, int $foo2, bool $foo4, Car $car, float $f, array $a)
         {
         }
     }

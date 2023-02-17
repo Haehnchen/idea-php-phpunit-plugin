@@ -76,7 +76,7 @@ public class ConstructorMockIntentionTest extends PhpUnitLightCodeInsightFixture
         assertTrue(text.contains("use Bar\\Car;"));
 
         assertTrue(
-            text.contains("new \\Foo\\BarPrimitives('?', -1, true, $this->createMock(Car::class));")
+            text.contains("new \\Foo\\BarPrimitives('?', -1, true, $this->createMock(Car::class), 0.0, []);")
         );
     }
 
