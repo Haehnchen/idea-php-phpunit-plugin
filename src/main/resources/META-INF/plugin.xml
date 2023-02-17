@@ -85,24 +85,28 @@
         <codeInsight.lineMarkerProvider language="PHP" implementationClass="de.espend.idea.php.phpunit.linemarker.RelatedTestCaseLineMarkerProvider"/>
 
         <intentionAction>
+            <language>PHP</language>
             <className>de.espend.idea.php.phpunit.intention.TestRunIntentionAction</className>
             <category>PHPUnit</category>
             <descriptionDirectoryName>TestRunIntentionAction</descriptionDirectoryName>
         </intentionAction>
 
         <intentionAction>
+            <language>PHP</language>
             <className>de.espend.idea.php.phpunit.intention.AddMockMethodIntention</className>
             <category>PHPUnit</category>
             <descriptionDirectoryName>AddMockMethodIntention</descriptionDirectoryName>
         </intentionAction>
 
         <intentionAction>
+            <language>PHP</language>
             <className>de.espend.idea.php.phpunit.intention.ConstructorMockIntention</className>
             <category>PHPUnit</category>
             <descriptionDirectoryName>ConstructorMockIntention</descriptionDirectoryName>
         </intentionAction>
 
         <intentionAction>
+            <language>PHP</language>
             <className>de.espend.idea.php.phpunit.intention.MethodExceptionIntentionAction</className>
             <category>PHPUnit</category>
             <descriptionDirectoryName>MethodExceptionIntentionAction</descriptionDirectoryName>
