@@ -51,7 +51,7 @@ public class MethodExceptionIntentionAction extends PsiElementBaseIntentionActio
         }
 
         if (IntentionPreviewUtils.isPreviewElement(psiElement) || exceptions.size() == 1) {
-            PhpUnitPluginUtil.insertExpectedException(editor.getDocument(), method, exceptions.iterator().next());
+            PhpUnitPluginUtil.insertExpectedException(editor.getDocument(), method, psiElement, exceptions.iterator().next());
 
             return;
         }
@@ -60,11 +60,11 @@ public class MethodExceptionIntentionAction extends PsiElementBaseIntentionActio
 
         JBPopupFactory.getInstance().createPopupChooserBuilder(list)
             .setTitle("PHPUnit: Select Exception")
-            .setItemSelectedCallback(s -> WriteCommandAction.runWriteCommandAction(
+            .setItemChosenCallback(s -> WriteCommandAction.runWriteCommandAction(
                 psiElement.getProject(),
                 getText(),
                 "",
-                () -> PhpUnitPluginUtil.insertExpectedException(editor.getDocument(), method, s),
+                () -> PhpUnitPluginUtil.insertExpectedException(editor.getDocument(), method, psiElement, s),
                 psiElement.getContainingFile()
             ))
             .createPopup()
