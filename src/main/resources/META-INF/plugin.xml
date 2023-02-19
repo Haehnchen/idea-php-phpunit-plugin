@@ -44,7 +44,7 @@
     <p>Fork of <a href="https://github.com/maxfilatov/phpuaca/">PHPUnit Autocomplete Assistant</a></p>
   ]]></description>
 
-    <idea-version since-build="223"/>
+    <idea-version since-build="223.4884.69"/>
 
     <depends>com.jetbrains.php</depends>
     <depends>com.intellij.modules.platform</depends>
