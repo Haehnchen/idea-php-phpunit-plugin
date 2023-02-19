@@ -1,11 +1,21 @@
 # Changelog
 
 ## Versions
-* 5.x: PhpStorm 2020.2+
+* 7.x: PhpStorm 2022.3+
+* 5.x: PhpStorm 2020.2+ (no support)
 * 4.x: PhpStorm 2020.1+ (no support)
 * 3.x: PhpStorm 2017.3+ (no support)
 * 2.x: PhpStorm 2017.1+ (no support)
 * 1.x: PhpStorm 2016.1+ (no support)
+
+## 7.0
+* Migrate expected exception from docblock to inline php check (docblock deprecated by phpunit) (Daniel Espendiller)
+* Add plugin error reporter (Daniel Espendiller)
+* IntentionAction should have a language tag (Daniel Espendiller)
+* ConstructorMockIntention should support all API version related to preview thread (Daniel Espendiller)
+* Support preview and fix indention feature for mocked methods generator (Daniel Espendiller)
+* Support preview and fix indention feature for excepting exception generator; add icon for internal test runner (Daniel Espendiller)
+* Support preview and fix indention feature for constructor mocking (Daniel Espendiller)
 
 ## 6.2
 * fix "ReplaceLegacyMockeryInspection" short naming (Daniel Espendiller)
