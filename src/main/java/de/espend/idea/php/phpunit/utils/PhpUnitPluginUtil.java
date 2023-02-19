@@ -141,47 +141,26 @@ public class PhpUnitPluginUtil {
     /**
      * Insert "expectException" for given scope (eg method)
      */
-    public static void insertExpectedException(@NotNull Document document, @NotNull PhpNamedElement forElement, @NotNull String exceptionClass) {
-        PhpDocComment docComment = forElement.getDocComment();
+    public static void insertExpectedException(@NotNull Document document, @NotNull Function function, @NotNull PsiElement psiElement, @NotNull String exceptionClass) {
+        String fqn = "\\" + StringUtils.stripStart(exceptionClass, "\\");
 
-        String tagString = "@expectedException \\" + exceptionClass;
+        // add scope
+        PsiElement addScope = PsiTreeUtil.getPrevSiblingOfType(psiElement, Statement.class);;
+        if (addScope == null) {
+            addScope = PsiTreeUtil.getNextSiblingOfType(psiElement, Statement.class);
+        }
 
-        // we need to update
-        if(docComment != null)  {
-            PsiElement elementToInsert = PhpPsiElementFactory.createFromText(forElement.getProject(), PhpDocTag.class, "/** " + tagString + " */\\n");
-            if(elementToInsert == null) {
-                return;
-            }
+        if (addScope == null) {
+            addScope = PsiTreeUtil.getParentOfType(psiElement, Statement.class, true, GroupStatement.class);
+        }
 
-            PsiElement fromText = PhpPsiElementFactory.createFromText(forElement.getProject(), PhpDocTokenTypes.DOC_LEADING_ASTERISK, "/** \n * @var */");
-            docComment.addBefore(fromText, docComment.getLastChild());
-            docComment.addBefore(elementToInsert, docComment.getLastChild());
-
-            PsiDocumentManager.getInstance(forElement.getProject()).doPostponedOperationsAndUnblockDocument(document);
-            PsiDocumentManager.getInstance(forElement.getProject()).commitDocument(document);
-
+        if (addScope == null)  {
             return;
         }
 
-        // new PhpDoc see PhpDocCommentGenerator
-        docComment = PhpPsiElementFactory.createFromText(forElement.getProject(), PhpDocComment.class, "/**\n " + tagString + " \n */");
-        if(docComment == null) {
-            return;
-        }
+        String s = PhpElementsUtil.insertUseIfNecessary(function, fqn);
+        Statement statement = PhpPsiElementFactory.createStatement(function.getProject(), "$this->expectException(" + (s != null ? s : fqn) + "::class);");
 
-        PsiElement parent = forElement.getParent();
-        int atOffset = forElement.getTextRange().getStartOffset() + 1;
-        parent.addBefore(docComment, forElement);
-        PsiDocumentManager.getInstance(forElement.getProject()).doPostponedOperationsAndUnblockDocument(document);
-        PsiElement atElement = forElement.getContainingFile().findElementAt(atOffset);
-        if (atElement != null)            {
-            PsiElement docParent = PsiTreeUtil.findFirstParent(atElement, true, element -> ((element instanceof PhpDocComment)) || ((element instanceof PhpFile)));
-            if ((docParent instanceof PhpDocComment)) {
-                CodeStyleManager.getInstance(forElement.getProject()).reformatNewlyAddedElement(docParent.getParent().getNode(), docParent.getNode());
-            }
-        }
-
-        PsiDocumentManager.getInstance(forElement.getProject()).doPostponedOperationsAndUnblockDocument(document);
-        PsiDocumentManager.getInstance(forElement.getProject()).commitDocument(document);
+        addScope.getParent().addAfter(statement, addScope);
     }
 }
