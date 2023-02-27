@@ -82,6 +82,9 @@
 
         <psi.referenceContributor language="PHP" implementation="com.phpuaca.reference.StringReferenceContributor"/>
 
+        <psi.referenceContributor language="PHP" implementation="de.espend.idea.php.phpunit.reference.PhpUnitCreatePartialMock$ReferenceContributor"/>
+        <completion.contributor language="PHP" implementationClass="de.espend.idea.php.phpunit.reference.PhpUnitCreatePartialMock$Completion"/>
+
         <codeInsight.lineMarkerProvider language="PHP" implementationClass="de.espend.idea.php.phpunit.linemarker.RelatedTestCaseLineMarkerProvider"/>
 
         <errorHandler implementation="de.espend.idea.php.phpunit.ide.PluginErrorReporterSubmitter"/>
