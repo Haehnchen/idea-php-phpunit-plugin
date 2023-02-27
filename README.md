@@ -64,6 +64,16 @@ class Foo extends \PHPUnit\Framework\TestCase
 ```php
 class Foo extends \PHPUnit\Framework\TestCase
 {
+   public function testFoo()
+   {
+       $bar = $this->createPartialMock(\\Foo\Bar::class, ['<caret>']);
+   }
+}
+```
+
+```php
+class Foo extends \PHPUnit\Framework\TestCase
+{
    public function setUp()
    {
        $this->foo = $this->createMock('Foo\Bar');

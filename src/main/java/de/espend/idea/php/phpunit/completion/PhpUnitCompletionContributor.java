@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  */
 public class PhpUnitCompletionContributor extends CompletionContributor {
     public PhpUnitCompletionContributor() {
-        extend(CompletionType.BASIC, PatternUtil.getMethodReferenceWithParameterInsideTokenStringPattern(), new CompletionProvider<CompletionParameters>() {
+        extend(CompletionType.BASIC, PatternUtil.getMethodReferenceWithParameterInsideTokenStringPattern(), new CompletionProvider<>() {
             @Override
             protected void addCompletions(@NotNull CompletionParameters completionParameters, @NotNull ProcessingContext processingContext, @NotNull CompletionResultSet resultSet) {
                 PsiElement psiElement = completionParameters.getPosition();
@@ -30,13 +30,7 @@ public class PhpUnitCompletionContributor extends CompletionContributor {
                 if (parent instanceof StringLiteralExpression) {
                     String parameter = PhpUnitPluginUtil.findCreateMockParameterOnParameterScope((StringLiteralExpression) parent);
                     if (parameter != null) {
-                        for (PhpClass phpClass : PhpIndex.getInstance(psiElement.getProject()).getAnyByFQN(parameter)) {
-                            resultSet.addAllElements(phpClass.getMethods().stream()
-                                .filter(method -> !method.getAccess().isPublic() || !method.getName().startsWith("__"))
-                                .map((Function<Method, LookupElement>) PhpLookupElement::new)
-                                .collect(Collectors.toSet())
-                            );
-                        }
+                        resultSet.addAllElements(PhpUnitPluginUtil.getMockableMethods(psiElement.getProject(), parameter));
                     }
                 }
             }
