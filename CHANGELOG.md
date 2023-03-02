@@ -8,6 +8,10 @@
 * 2.x: PhpStorm 2017.1+ (no support)
 * 1.x: PhpStorm 2016.1+ (no support)
 
+## 7.1
+* Add inspection for mocked deprecation methods (Daniel Espendiller)
+* Add support for "createPartialMock" method references (Daniel Espendiller)
+
 ## 7.0
 * Migrate expected exception from docblock to inline php check (docblock deprecated by phpunit) (Daniel Espendiller)
 * Add plugin error reporter (Daniel Espendiller)
