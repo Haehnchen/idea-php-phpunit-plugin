@@ -2,11 +2,11 @@ package de.espend.idea.php.phpunit.reference;
 
 import com.intellij.codeInsight.completion.*;
 import com.intellij.patterns.PlatformPatterns;
-import com.intellij.patterns.PsiElementPattern.Capture;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
 import com.jetbrains.php.lang.psi.elements.*;
+import de.espend.idea.php.phpunit.utils.PatternUtil;
 import de.espend.idea.php.phpunit.utils.PhpElementsUtil;
 import de.espend.idea.php.phpunit.utils.PhpUnitPluginUtil;
 import org.apache.commons.lang.StringUtils;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 public class PhpUnitCreatePartialMock {
     public static class Completion extends CompletionContributor {
         public Completion() {
-            extend(CompletionType.BASIC, PlatformPatterns.psiElement().withParent(getArrayParameterPattern()), new CompletionProvider<>() {
+            extend(CompletionType.BASIC, PlatformPatterns.psiElement().withParent(PatternUtil.getArrayParameterPattern()), new CompletionProvider<>() {
                 @Override
                 protected void addCompletions(@NotNull CompletionParameters completionParameters, @NotNull ProcessingContext processingContext, @NotNull CompletionResultSet resultSet) {
                     PsiElement psiElement1 = completionParameters.getPosition();
@@ -35,9 +35,7 @@ public class PhpUnitCreatePartialMock {
                         return;
                     }
 
-                    if(PhpElementsUtil.isMethodReferenceInstanceOf(parentOfType,  "\\PHPUnit\\Framework\\TestCase", "createPartialMock") ||
-                        PhpElementsUtil.isMethodReferenceInstanceOf(parentOfType,  "PHPUnit_Framework_TestCase", "createPartialMock")
-                    ) {
+                    if (PhpUnitPluginUtil.isCreatePartialMockMethod(parentOfType)) {
                         PsiElement originalClassName = parentOfType.getParameter("originalClassName", 0);
 
                         if (originalClassName == null) {
@@ -59,7 +57,7 @@ public class PhpUnitCreatePartialMock {
     public static class ReferenceContributor extends PsiReferenceContributor {
         @Override
         public void registerReferenceProviders(@NotNull PsiReferenceRegistrar psiReferenceRegistrar) {
-            psiReferenceRegistrar.registerReferenceProvider(getArrayParameterPattern(),
+            psiReferenceRegistrar.registerReferenceProvider(PatternUtil.getArrayParameterPattern(),
                 new PsiReferenceProvider() {
                     @NotNull
                     @Override
@@ -78,9 +76,7 @@ public class PhpUnitCreatePartialMock {
                             return new PsiReference[0];
                         }
 
-                        if(PhpElementsUtil.isMethodReferenceInstanceOf(parentOfType,  "\\PHPUnit\\Framework\\TestCase", "createPartialMock") ||
-                            PhpElementsUtil.isMethodReferenceInstanceOf(parentOfType,  "PHPUnit_Framework_TestCase", "createPartialMock")
-                        ) {
+                        if (PhpUnitPluginUtil.isCreatePartialMockMethod(parentOfType)) {
                             PsiElement originalClassName = parentOfType.getParameter("originalClassName", 0);
 
                             if (originalClassName == null) {
@@ -102,14 +98,5 @@ public class PhpUnitCreatePartialMock {
                 }
             );
         }
-    }
-
-    private static @NotNull Capture<StringLiteralExpression> getArrayParameterPattern() {
-        return PlatformPatterns.psiElement(StringLiteralExpression.class)
-            .withParent(PlatformPatterns.psiElement(PhpPsiElement.class)
-                .withParent(PlatformPatterns.psiElement(ArrayCreationExpression.class)
-                    .withParent(PlatformPatterns.psiElement(ParameterList.class)
-                        .withParent(MethodReference.class))));
-
     }
 }
