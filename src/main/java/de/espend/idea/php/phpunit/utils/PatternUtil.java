@@ -76,4 +76,17 @@ public class PatternUtil {
         }
         return PlatformPatterns.psiElement(baseClass).withParent(currentCapture);
     }
+
+
+    /**
+     * "$this->createPartialMock(Foo::class, ['foobar']);"
+     */
+    public static @NotNull PsiElementPattern.Capture<StringLiteralExpression> getArrayParameterPattern() {
+        return PlatformPatterns.psiElement(StringLiteralExpression.class)
+            .withParent(PlatformPatterns.psiElement(PhpPsiElement.class)
+                .withParent(PlatformPatterns.psiElement(ArrayCreationExpression.class)
+                    .withParent(PlatformPatterns.psiElement(ParameterList.class)
+                        .withParent(MethodReference.class))));
+
+    }
 }

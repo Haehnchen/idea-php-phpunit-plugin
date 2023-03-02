@@ -187,4 +187,8 @@ public class PhpUnitPluginUtil {
         return elements;
     }
 
+    public static boolean isCreatePartialMockMethod(@NotNull MethodReference parentOfType) {
+        return PhpElementsUtil.isMethodReferenceInstanceOf(parentOfType, "\\PHPUnit\\Framework\\TestCase", "createPartialMock")
+            || PhpElementsUtil.isMethodReferenceInstanceOf(parentOfType, "PHPUnit_Framework_TestCase", "createPartialMock");
+    }
 }

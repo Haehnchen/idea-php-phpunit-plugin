@@ -121,6 +121,9 @@
                          displayName="Replace legacy Mockery syntax" groupName="Mockery" enabledByDefault="true" level="WARNING"
                          implementationClass="de.espend.idea.php.phpunit.inspection.ReplaceLegacyMockeryInspection"/>
 
+        <localInspection language="PHP" groupPath="PHP" shortName="DeprecatedMockedMethodInspection"
+                         displayName="Mocked method is deprecated" groupName="PhpUnit" enabledByDefault="true" level="WARNING"
+                         implementationClass="de.espend.idea.php.phpunit.inspection.DeprecatedMockedMethodInspection"/>
     </extensions>
 
     <application-components>

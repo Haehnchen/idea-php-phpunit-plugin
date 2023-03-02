@@ -21,10 +21,12 @@ public class CreateMockMethodReferenceProcessor implements ChainVisitorUtil.Chai
 
     @Override
     public boolean process(@NotNull MethodReference methodReference) {
-        if(PhpElementsUtil.isMethodReferenceInstanceOf(methodReference,  "\\PHPUnit\\Framework\\TestCase", "createMock") ||
-           PhpElementsUtil.isMethodReferenceInstanceOf(methodReference,  "PHPUnit_Framework_TestCase", "createMock")
-           ) {
+        boolean isMockShortcutMethod = PhpElementsUtil.isMethodReferenceInstanceOf(methodReference, "\\PHPUnit\\Framework\\TestCase", "createMock")
+            || PhpElementsUtil.isMethodReferenceInstanceOf(methodReference, "PHPUnit_Framework_TestCase", "createMock")
+            || PhpElementsUtil.isMethodReferenceInstanceOf(methodReference, "\\PHPUnit\\Framework\\TestCase", "createPartialMock")
+            || PhpElementsUtil.isMethodReferenceInstanceOf(methodReference, "PHPUnit_Framework_TestCase", "createPartialMock");
 
+        if (isMockShortcutMethod) {
             PsiElement[] parameters = methodReference.getParameters();
 
             if(parameters.length > 0) {
