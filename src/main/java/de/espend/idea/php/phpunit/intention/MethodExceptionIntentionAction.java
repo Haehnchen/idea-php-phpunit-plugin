@@ -21,7 +21,7 @@ import com.jetbrains.php.phpunit.PhpUnitUtil;
 import de.espend.idea.php.phpunit.PhpUnitIcons;
 import de.espend.idea.php.phpunit.utils.PhpUnitPluginUtil;
 import one.util.streamex.StreamEx;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

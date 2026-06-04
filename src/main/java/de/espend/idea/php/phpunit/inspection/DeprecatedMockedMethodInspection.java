@@ -11,7 +11,7 @@ import com.jetbrains.php.lang.psi.elements.*;
 import de.espend.idea.php.phpunit.utils.PatternUtil;
 import de.espend.idea.php.phpunit.utils.PhpElementsUtil;
 import de.espend.idea.php.phpunit.utils.PhpUnitPluginUtil;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
