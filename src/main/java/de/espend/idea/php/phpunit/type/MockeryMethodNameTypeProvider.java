@@ -9,9 +9,10 @@ import com.jetbrains.php.lang.psi.resolve.types.PhpType;
 import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider4;
 import de.espend.idea.php.phpunit.type.utils.PhpTypeProviderUtil;
 import de.espend.idea.php.phpunit.utils.processor.IndexLessMethodParameterChainProcessor;
-import org.apache.commons.net.util.Base64;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Set;
 
@@ -33,7 +34,7 @@ public class MockeryMethodNameTypeProvider implements PhpTypeProvider4 {
 
             String clazz = IndexLessMethodParameterChainProcessor.createParameter((MethodReference) psiElement, "mock");
             if (clazz != null) {
-                String type = "#" + this.getKey() + Base64.encodeBase64String(clazz.getBytes());
+                String type = "#" + this.getKey() + Base64.getEncoder().encodeToString(clazz.getBytes(StandardCharsets.UTF_8));
 
                 if (((MethodReference) psiElement).getParameters().length == 0) {
                     // e.g. $mock->allows()
@@ -67,7 +68,7 @@ public class MockeryMethodNameTypeProvider implements PhpTypeProvider4 {
             return null;
         }
 
-        String resolvedParameter = PhpTypeProviderUtil.getResolvedParameter(phpIndex, new String(Base64.decodeBase64(split[0])));
+        String resolvedParameter = PhpTypeProviderUtil.getResolvedParameter(phpIndex, new String(Base64.getDecoder().decode(split[0]), StandardCharsets.UTF_8));
         if (resolvedParameter == null) {
             return null;
         }

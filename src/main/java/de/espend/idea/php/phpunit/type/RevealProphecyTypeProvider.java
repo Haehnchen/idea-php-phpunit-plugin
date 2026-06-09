@@ -13,9 +13,10 @@ import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider4;
 import de.espend.idea.php.phpunit.type.utils.PhpTypeProviderUtil;
 import de.espend.idea.php.phpunit.type.utils.ProphecyTypeUtil;
 import de.espend.idea.php.phpunit.utils.PhpUnitPluginUtil;
-import org.apache.commons.net.util.Base64;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Set;
 
@@ -43,7 +44,7 @@ public class RevealProphecyTypeProvider implements PhpTypeProvider4 {
                 if (containingClass != null && PhpUnitPluginUtil.isTestClassWithoutIndexAccess(containingClass)) {
                     String prophesize = ProphecyTypeUtil.getLocalProphesizeType((MethodReference) element);
                     if (prophesize != null) {
-                        return new PhpType().add("#" + this.getKey() + Base64.encodeBase64String(prophesize.getBytes()));
+                        return new PhpType().add("#" + this.getKey() + Base64.getEncoder().encodeToString(prophesize.getBytes(StandardCharsets.UTF_8)));
                     }
                 }
             }
@@ -62,7 +63,7 @@ public class RevealProphecyTypeProvider implements PhpTypeProvider4 {
     public Collection<? extends PhpNamedElement> getBySignature(String expression, Set<String> visited, int depth, Project project) {
         PhpIndex phpIndex = PhpIndex.getInstance(project);
 
-        String resolvedParameter = PhpTypeProviderUtil.getResolvedParameter(phpIndex, new String(Base64.decodeBase64(expression)));
+        String resolvedParameter = PhpTypeProviderUtil.getResolvedParameter(phpIndex, new String(Base64.getDecoder().decode(expression), StandardCharsets.UTF_8));
         if(resolvedParameter == null) {
             return null;
         }
