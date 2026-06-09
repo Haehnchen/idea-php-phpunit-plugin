@@ -12,7 +12,7 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.patterns.ElementPattern;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase;
+import com.intellij.testFramework.fixtures.LightJavaCodeInsightFixtureTestCase;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.elements.PhpReference;
 import com.jetbrains.php.lang.psi.elements.PhpTypedElement;
@@ -24,7 +24,7 @@ import java.util.*;
 /**
  * @author Daniel Espendiller <daniel@espendiller.net>
  */
-public abstract class PhpUnitLightCodeInsightFixtureTestCase extends LightCodeInsightFixtureTestCase {
+public abstract class PhpUnitLightCodeInsightFixtureTestCase extends LightJavaCodeInsightFixtureTestCase {
 
     public void assertCompletionContains(LanguageFileType languageFileType, String configureByText, String... lookupStrings) {
 

@@ -9,9 +9,10 @@ import com.jetbrains.php.lang.psi.resolve.types.PhpType;
 import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider4;
 import de.espend.idea.php.phpunit.type.utils.PhpTypeProviderUtil;
 import de.espend.idea.php.phpunit.utils.processor.IndexLessMethodParameterChainProcessor;
-import org.apache.commons.net.util.Base64;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Set;
 
@@ -30,7 +31,7 @@ public class GetMockTypeProvider implements PhpTypeProvider4 {
         if(psiElement instanceof MethodReference && "getMock".equals(((MethodReference) psiElement).getName())) {
             String clazz = IndexLessMethodParameterChainProcessor.createParameter((MethodReference) psiElement, "getMockBuilder");
             if(clazz != null) {
-                return new PhpType().add("#" + this.getKey() + Base64.encodeBase64String(clazz.getBytes()));
+                return new PhpType().add("#" + this.getKey() + Base64.getEncoder().encodeToString(clazz.getBytes(StandardCharsets.UTF_8)));
             }
         }
 
@@ -47,7 +48,7 @@ public class GetMockTypeProvider implements PhpTypeProvider4 {
     public Collection<? extends PhpNamedElement> getBySignature(String expression, Set<String> visited, int depth, Project project) {
         PhpIndex phpIndex = PhpIndex.getInstance(project);
 
-        String resolvedParameter = PhpTypeProviderUtil.getResolvedParameter(phpIndex, new String(Base64.decodeBase64(expression)));
+        String resolvedParameter = PhpTypeProviderUtil.getResolvedParameter(phpIndex, new String(Base64.getDecoder().decode(expression), StandardCharsets.UTF_8));
         if(resolvedParameter == null) {
             return null;
         }
