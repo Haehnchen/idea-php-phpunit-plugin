@@ -4,3 +4,12 @@ out/
 /.gradle
 /build
 *.iml
+
+decompiled
+.junie
+*.hprof
+.mcp.json
+.codex
+.kotlin
+.agents
+.claude
