@@ -57,7 +57,6 @@ public class PhpUnitPluginUtil {
 
         if(context != null) {
             ProgramRunnerUtil.executeConfiguration(
-                psiElement.getProject(),
                 context.getConfigurationSettings(),
                 DefaultDebugExecutor.getDebugExecutorInstance()
             );

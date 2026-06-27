@@ -2,6 +2,7 @@ package com.phpuaca.annotator;
 
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
+import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
@@ -28,11 +29,13 @@ public class StringAnnotator implements Annotator {
                     TextRange annotationTextRange = new TextRange(textRange.getStartOffset() + 1, textRange.getEndOffset() - 1);
                     if (method == null) {
                         if (phpClass.findFieldByName(name, false) == null) {
-                            annotationHolder.createWarningAnnotation(annotationTextRange, "Method '" + name + "' not found in class " + phpClass.getName());
+                            annotationHolder.newAnnotation(HighlightSeverity.WARNING, "Method '" + name + "' not found in class " + phpClass.getName())
+                                .range(annotationTextRange).create();
                         }
                     } else {
                         if (!filter.isMethodAllowed(method)) {
-                            annotationHolder.createWarningAnnotation(annotationTextRange, "Method '" + name + "' is not allowed to use here");
+                            annotationHolder.newAnnotation(HighlightSeverity.WARNING, "Method '" + name + "' is not allowed to use here")
+                                .range(annotationTextRange).create();
                         }
                     }
                 }
