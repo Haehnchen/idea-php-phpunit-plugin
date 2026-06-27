@@ -5,8 +5,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Iconable;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
-import com.jetbrains.php.lang.psi.PhpPsiUtil;
 import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.phpunit.PhpUnitUtil;
@@ -37,12 +37,12 @@ public class TestRunIntentionAction extends PsiElementBaseIntentionAction implem
 
     @Nullable
     private PsiElement getTestContextElement(@NotNull PsiElement psiElement) {
-        Method method = PhpPsiUtil.getParentByCondition(psiElement, Method.INSTANCEOF);
+        Method method = PsiTreeUtil.getStubOrPsiParentOfType(psiElement, Method.class);
         if(method != null && PhpUnitUtil.isTestMethod(method)) {
             return method;
         }
 
-        PhpClass phpClass = PhpPsiUtil.getParentByCondition(psiElement, PhpClass.INSTANCEOF);
+        PhpClass phpClass = PsiTreeUtil.getStubOrPsiParentOfType(psiElement, PhpClass.class);
         if(phpClass != null && PhpUnitUtil.isTestClass(phpClass)) {
             return phpClass;
         }

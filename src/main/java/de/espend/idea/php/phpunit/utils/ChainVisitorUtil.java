@@ -1,8 +1,8 @@
 package de.espend.idea.php.phpunit.utils;
 
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.jetbrains.php.lang.psi.PhpPsiUtil;
 import com.jetbrains.php.lang.psi.elements.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -65,10 +65,7 @@ public class ChainVisitorUtil {
     private static Collection<PhpPsiElement> resolveVariable(@NotNull Variable variable) {
         String name = variable.getName();
 
-        Function methodScope = PhpPsiUtil.getParentByCondition(
-            variable,
-            psiElement -> psiElement instanceof Function && !((Function) psiElement).isClosure()
-        );
+        Function methodScope = getNonClosureFunction(variable);
 
         if(methodScope == null) {
             return Collections.emptyList();
@@ -102,7 +99,7 @@ public class ChainVisitorUtil {
         String name = fieldReference.getName();
         if(name != null) {
             // find method scope, we not directly search for class as Method is our parent scope
-            Method methodScope = PhpPsiUtil.getParentByCondition(fieldReference, Method.INSTANCEOF);
+            Method methodScope = PsiTreeUtil.getStubOrPsiParentOfType(fieldReference, Method.class);
             if(methodScope != null) {
                 PhpClass phpClass = methodScope.getContainingClass();
                 if(phpClass != null) {
@@ -123,6 +120,24 @@ public class ChainVisitorUtil {
                     }
                 }
             }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    private static Function getNonClosureFunction(@NotNull PsiElement psiElement) {
+        PsiElement parent = PsiTreeUtil.getStubOrPsiParent(psiElement);
+        while (parent != null) {
+            if (parent instanceof Function && !((Function) parent).isClosure()) {
+                return (Function) parent;
+            }
+
+            if (parent instanceof PsiFile) {
+                return null;
+            }
+
+            parent = PsiTreeUtil.getStubOrPsiParent(parent);
         }
 
         return null;

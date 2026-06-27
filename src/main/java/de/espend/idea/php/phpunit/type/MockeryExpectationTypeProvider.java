@@ -2,8 +2,8 @@ package de.espend.idea.php.phpunit.type;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.jetbrains.php.PhpIndex;
-import com.jetbrains.php.lang.psi.PhpPsiUtil;
 import com.jetbrains.php.lang.psi.elements.*;
 import com.jetbrains.php.lang.psi.resolve.types.PhpType;
 import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider4;
@@ -31,7 +31,7 @@ public class MockeryExpectationTypeProvider implements PhpTypeProvider4 {
     @Override
     public PhpType getType(PsiElement element) {
         if (element instanceof MethodReference) {
-            Method method = PhpPsiUtil.getParentByCondition(element, Method.INSTANCEOF);
+            Method method = PsiTreeUtil.getStubOrPsiParentOfType(element, Method.class);
 
             if (method == null) {
                 return null;

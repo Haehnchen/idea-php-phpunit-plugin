@@ -4,7 +4,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.jetbrains.php.PhpIndex;
-import com.jetbrains.php.lang.psi.PhpPsiUtil;
 import com.jetbrains.php.lang.psi.elements.*;
 import com.jetbrains.php.lang.psi.resolve.types.PhpType;
 import com.jetbrains.php.lang.psi.resolve.types.PhpTypeProvider4;
@@ -39,7 +38,7 @@ public class SetUpTypeProvider implements PhpTypeProvider4 {
             String name = ((FieldReference) element).getName();
             if(name != null) {
                 // find method scope, we not directly search for class as Method is our parent scope
-                Method methodScope = PhpPsiUtil.getParentByCondition(element, Method.INSTANCEOF);
+                Method methodScope = PsiTreeUtil.getStubOrPsiParentOfType(element, Method.class);
                 if(methodScope != null) {
                     PhpClass phpClass = methodScope.getContainingClass();
                     if(phpClass != null && PhpUnitPluginUtil.isTestClassWithoutIndexAccess(phpClass)) {
