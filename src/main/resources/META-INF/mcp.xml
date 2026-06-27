@@ -1,0 +1,5 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <mcpServer.mcpToolsProvider implementation="de.espend.idea.php.phpunit.mcp.PhpUnitMcpToolsProvider"/>
+    </extensions>
+</idea-plugin>

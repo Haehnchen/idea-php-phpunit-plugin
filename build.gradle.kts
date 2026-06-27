@@ -37,12 +37,14 @@ dependencies {
             "com.intellij.modules.xml",
             "com.intellij.modules.php-capable",
             "com.intellij.modules.json",
+            "com.intellij.mcpServer",
         )
         testBundledPlugins(
             "com.intellij.java",
             "com.intellij.modules.xml",
             "com.intellij.modules.php-capable",
             "com.intellij.modules.json",
+            "com.intellij.mcpServer",
         )
         bundledModules(
             "com.intellij.modules.ultimate",

@@ -48,6 +48,7 @@
 
     <depends>com.jetbrains.php</depends>
     <depends>com.intellij.modules.platform</depends>
+    <depends config-file="mcp.xml" optional="true">com.intellij.mcpServer</depends>
 
     <extensions defaultExtensionNs="com.jetbrains.php">
         <typeProvider4 implementation="de.espend.idea.php.phpunit.type.MockProphecyTypeProvider"/>
