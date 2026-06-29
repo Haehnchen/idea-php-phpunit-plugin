@@ -25,6 +25,10 @@ namespace Prophecy
         public static function any()
         {
         }
+
+        public static function cetera()
+        {
+        }
     }
 }
 

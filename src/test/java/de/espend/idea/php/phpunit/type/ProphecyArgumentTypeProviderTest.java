@@ -8,11 +8,13 @@ import de.espend.idea.php.phpunit.PhpUnitLightCodeInsightFixtureTestCase;
  * @see ProphecyArgumentTypeProvider
  */
 public class ProphecyArgumentTypeProviderTest extends PhpUnitLightCodeInsightFixtureTestCase {
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         myFixture.copyFileToProject("ProphecyArgumentTypeProvider.php");
     }
 
+    @Override
     public String getTestDataPath() {
         return "src/test/java/de/espend/idea/php/phpunit/type/fixtures";
     }
@@ -54,6 +56,34 @@ public class ProphecyArgumentTypeProviderTest extends PhpUnitLightCodeInsightFix
                 "        {\n" +
                 "            $foo = $this->prophesize(Foo::class);\n" +
                 "            $foo->getBar(\\Prophecy\\Argument::any(), \\Prophecy\\Argument::a<caret>ny());\n" +
+                "        }\n" +
+                "    }",
+            "\\Foo"
+        );
+    }
+
+    public void testThatProphecyCeteraProvidesTypesForPrimitives() {
+        assertMethodContainsTypes(PhpFileType.INSTANCE, "<?php\n" +
+                "class FooTest extends \\PHPUnit\\Framework\\TestCase\n" +
+                "    {\n" +
+                "        public function testFoobar()\n" +
+                "        {\n" +
+                "            $foo = $this->prophesize(Foo::class);\n" +
+                "            $foo->getBar(\\Prophecy\\Argument::ce<caret>tera());\n" +
+                "        }\n" +
+                "    }",
+            "\\array"
+        );
+    }
+
+    public void testThatProphecyCeteraProvidesTypesForClasses() {
+        assertMethodContainsTypes(PhpFileType.INSTANCE, "<?php\n" +
+                "class FooTest extends \\PHPUnit\\Framework\\TestCase\n" +
+                "    {\n" +
+                "        public function testFoobar()\n" +
+                "        {\n" +
+                "            $foo = $this->prophesize(Foo::class);\n" +
+                "            $foo->getBar(\\Prophecy\\Argument::any(), \\Prophecy\\Argument::ce<caret>tera());\n" +
                 "        }\n" +
                 "    }",
             "\\Foo"

@@ -157,9 +157,9 @@ public class ReplaceLegacyMockeryInspectionTest extends LightJavaCodeInsightFixt
 
     public void testShouldReceiveTimesToExpects() {
         doTest("shouldReceiveTimesToExpects", false, false);
-        doTest("shouldReceiveTwiceToExpects", false, true);
-        doTest("shouldReceiveTwiceToExpectsFunctional", true, false);
-        doTest("shouldReceiveTwiceToExpectsFunctional", true, true);
+        doTest("shouldReceiveTimesToExpects", false, true);
+        doTest("shouldReceiveTimesToExpectsFunctional", true, false);
+        doTest("shouldReceiveTimesToExpectsFunctional", true, true);
     }
 
     public void testShouldReceiveWithAndReturnTwiceToExpects() {
@@ -211,4 +211,3 @@ public class ReplaceLegacyMockeryInspectionTest extends LightJavaCodeInsightFixt
         doTest("shouldNotReceiveToAllowsNeverMultipleArgumentsFunctional", true, true);
     }
 }
-

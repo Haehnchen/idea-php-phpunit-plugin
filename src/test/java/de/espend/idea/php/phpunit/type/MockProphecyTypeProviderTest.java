@@ -10,11 +10,13 @@ import de.espend.idea.php.phpunit.PhpUnitLightCodeInsightFixtureTestCase;
  * @see MockProphecyTypeProvider
  */
 public class MockProphecyTypeProviderTest extends PhpUnitLightCodeInsightFixtureTestCase {
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         myFixture.copyFileToProject("classes.php");
     }
 
+    @Override
     public String getTestDataPath() {
         return "src/test/java/de/espend/idea/php/phpunit/type/fixtures";
     }
@@ -31,6 +33,38 @@ public class MockProphecyTypeProviderTest extends PhpUnitLightCodeInsightFixture
             "<?php" +
                 "/** @var $t \\PHPUnit\\Framework\\TestCase */\n" +
                 "$t->createMock('Foo')->b<caret>ar();",
+            PlatformPatterns.psiElement(Method.class).withName("bar")
+        );
+    }
+
+    public void testResolveForPhpunitLegacyMockMethods() {
+        assertPhpReferenceResolveTo(PhpFileType.INSTANCE,
+            "<?php" +
+                "/** @var $t \\PHPUnit\\Framework\\TestCase */\n" +
+                "$t->getMock(Foo::class)->b<caret>ar();",
+            PlatformPatterns.psiElement(Method.class).withName("bar")
+        );
+
+        assertPhpReferenceResolveTo(PhpFileType.INSTANCE,
+            "<?php" +
+                "/** @var $t \\PHPUnit\\Framework\\TestCase */\n" +
+                "$t->getMockForAbstractClass(Foo::class)->b<caret>ar();",
+            PlatformPatterns.psiElement(Method.class).withName("bar")
+        );
+
+        assertPhpReferenceResolveTo(PhpFileType.INSTANCE,
+            "<?php" +
+                "/** @var $t \\PHPUnit\\Framework\\TestCase */\n" +
+                "$t->getMockForTrait(Foo::class)->b<caret>ar();",
+            PlatformPatterns.psiElement(Method.class).withName("bar")
+        );
+    }
+
+    public void testResolveForLegacyPhpunitTestCaseMock() {
+        assertPhpReferenceResolveTo(PhpFileType.INSTANCE,
+            "<?php" +
+                "/** @var $t \\PHPUnit_Framework_TestCase */\n" +
+                "$t->createMock(Foo::class)->b<caret>ar();",
             PlatformPatterns.psiElement(Method.class).withName("bar")
         );
     }

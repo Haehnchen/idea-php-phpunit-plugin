@@ -48,3 +48,10 @@ namespace PHPUnit\Framework
     {
     }
 }
+
+namespace
+{
+    class PHPUnit_Framework_TestCase
+    {
+    }
+}

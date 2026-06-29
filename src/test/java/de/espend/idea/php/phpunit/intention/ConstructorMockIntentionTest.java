@@ -4,17 +4,21 @@ import com.intellij.psi.PsiElement;
 import com.jetbrains.php.lang.PhpFileType;
 import de.espend.idea.php.phpunit.PhpUnitLightCodeInsightFixtureTestCase;
 
+import java.util.Objects;
+
 /**
  * @author Daniel Espendiller <daniel@espendiller.net>
  *
  * @see de.espend.idea.php.phpunit.intention.ConstructorMockIntention
  */
 public class ConstructorMockIntentionTest extends PhpUnitLightCodeInsightFixtureTestCase {
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         myFixture.copyFileToProject("ConstructorMockIntention.php");
     }
 
+    @Override
     public String getTestDataPath() {
         return "src/test/java/de/espend/idea/php/phpunit/intention/fixtures";
     }
@@ -116,10 +120,40 @@ public class ConstructorMockIntentionTest extends PhpUnitLightCodeInsightFixture
                 "    }",
             "PHPUnit: Add constructor mocks"
         );
+
+        assertIntentionIsAvailable(PhpFileType.INSTANCE, "<?php\n" +
+                "class FooTest extends \\PHPUnit_Framework_TestCase\n" +
+                "    {\n" +
+                "        public function testFoobar()\n" +
+                "        {\n" +
+                "            $foo = new Fo<caret>obar()\n" +
+                "        }\n" +
+                "    }",
+            "PHPUnit: Add constructor mocks"
+        );
+    }
+
+    public void testThatRegisteredIntentionCreatesConstructorMocksInTestCase() {
+        myFixture.configureByText(PhpFileType.INSTANCE, "<?php\n" +
+            "class FooTest extends \\PHPUnit\\Framework\\TestCase\n" +
+            "{\n" +
+            "    public function testFoobar()\n" +
+            "    {\n" +
+            "        new \\Foo\\<caret>Bar();\n" +
+            "    }\n" +
+            "}"
+        );
+
+        myFixture.launchAction(myFixture.findSingleIntention("PHPUnit: Add constructor mocks"));
+
+        String text = myFixture.getFile().getText();
+        assertTrue(text.contains("use Bar\\Car;\n"));
+        assertTrue(text.contains("use Bar\\Foo;\n"));
+        assertTrue(text.contains("new \\Foo\\Bar($this->createMock(Foo::class), $this->createMock(Car::class));"));
     }
 
     private String invokeAndGetText() {
-        PsiElement psiElement = myFixture.getFile().findElementAt(myFixture.getCaretOffset());
+        PsiElement psiElement = Objects.requireNonNull(myFixture.getFile().findElementAt(myFixture.getCaretOffset()));
 
         new ConstructorMockIntention().invoke(getProject(), getEditor(), psiElement);
 

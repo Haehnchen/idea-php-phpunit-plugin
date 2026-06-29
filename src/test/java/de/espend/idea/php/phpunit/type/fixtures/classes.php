@@ -4,13 +4,27 @@ namespace PHPUnit\Framework
 {
     class TestCase
     {
-        static function createMock() {}
-        static function prophesize() {}
+        function getMock($className) {}
+        function getMockClass($className) {}
+        function getMockForAbstractClass($className) {}
+        function getMockForTrait($className) {}
+        function createMock($className) {}
+        function prophesize($className) {}
     };
 }
 
 namespace
 {
+    class PHPUnit_Framework_TestCase
+    {
+        function getMock($className) {}
+        function getMockClass($className) {}
+        function getMockForAbstractClass($className) {}
+        function getMockForTrait($className) {}
+        function createMock($className) {}
+        function prophesize($className) {}
+    }
+
     class Foo
     {
         public function bar() {}

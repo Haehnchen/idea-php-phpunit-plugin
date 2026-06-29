@@ -10,6 +10,7 @@ import de.espend.idea.php.phpunit.PhpUnitLightCodeInsightFixtureTestCase;
  * @see de.espend.idea.php.phpunit.type.SetUpTypeProvider
  */
 public class SetUpTypeProviderTest extends PhpUnitLightCodeInsightFixtureTestCase {
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         myFixture.copyFileToProject("classes.php");
@@ -17,6 +18,7 @@ public class SetUpTypeProviderTest extends PhpUnitLightCodeInsightFixtureTestCas
         myFixture.copyFileToProject("SetUpTypeProvider.php");
     }
 
+    @Override
     public String getTestDataPath() {
         return "src/test/java/de/espend/idea/php/phpunit/type/fixtures";
     }
@@ -39,9 +41,7 @@ public class SetUpTypeProviderTest extends PhpUnitLightCodeInsightFixtureTestCas
         );
     }
 
-    public void _testThatSetUpTypesForFieldReferencesAreProvidedForCreateMock() {
-        // @TODO: index access problems prevents a stable test?
-
+    public void testThatSetUpTypesForFieldReferencesAreProvidedForCreateMock() {
         assertPhpReferenceResolveTo(PhpFileType.INSTANCE, "<?php" +
                 "    class FooBarTest extends \\PHPUnit\\Framework\\TestCase\n" +
                 "    {\n" +

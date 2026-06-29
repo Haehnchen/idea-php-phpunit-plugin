@@ -210,7 +210,7 @@ namespace Mockery {
          * @param null|array|Closure $args
          * @return \Mockery\ExpectationInterface|\Mockery\Expectation
          */
-        public function shouldHaveReceived($method, $args = null){
+        public function shouldHaveReceived($method = null, $args = null){
             return new Expectation();
         }
 

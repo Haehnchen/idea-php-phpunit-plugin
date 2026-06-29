@@ -7,6 +7,10 @@ namespace Foo
         public function getFoobar()
         {
         }
+
+        public function getAlternativeFoobar()
+        {
+        }
     }
 }
 
@@ -17,11 +21,58 @@ namespace PHPUnit\Framework
         /**
          * @param string $originalClassName
          *
-         * @return \PHPUnit_Framework_MockObject_MockObject
+         * @return \PHPUnit\Framework\MockObject\MockObject
          */
         protected function createMock($originalClassName)
         {
-            return new \PHPUnit_Framework_MockObject_MockObject();
+            return new \PHPUnit\Framework\MockObject\MockObject();
+        }
+
+        /**
+         * @param string $originalClassName
+         * @param array $methods
+         *
+         * @return \PHPUnit\Framework\MockObject\MockObject
+         */
+        protected function createPartialMock($originalClassName, array $methods)
+        {
+            return new \PHPUnit\Framework\MockObject\MockObject();
+        }
+    }
+}
+
+namespace PHPUnit\Framework\MockObject
+{
+    class MockObject
+    {
+        /**
+         * @return \PHPUnit\Framework\MockObject\Builder\InvocationMocker
+         */
+        public function expects()
+        {
+            return new \PHPUnit\Framework\MockObject\Builder\InvocationMocker();
+        }
+
+        /**
+         * @return \PHPUnit\Framework\MockObject\Builder\InvocationMocker
+         */
+        public function method($constraint)
+        {
+            return new \PHPUnit\Framework\MockObject\Builder\InvocationMocker();
+        }
+    }
+}
+
+namespace PHPUnit\Framework\MockObject\Builder
+{
+    class InvocationMocker
+    {
+        /**
+         * @return \PHPUnit\Framework\MockObject\Builder\InvocationMocker
+         */
+        public function method($constraint)
+        {
+            return new \PHPUnit\Framework\MockObject\Builder\InvocationMocker();
         }
     }
 }
@@ -39,6 +90,17 @@ namespace
         {
             return new PHPUnit_Framework_MockObject_MockObject();
         }
+
+        /**
+         * @param string $originalClassName
+         * @param array $methods
+         *
+         * @return PHPUnit_Framework_MockObject_MockObject
+         */
+        protected function createPartialMock($originalClassName, array $methods)
+        {
+            return new PHPUnit_Framework_MockObject_MockObject();
+        }
     }
 
     /**
@@ -50,6 +112,14 @@ namespace
          * @return PHPUnit_Framework_MockObject_Builder_InvocationMocker
          */
         public function expects()
+        {
+            return new PHPUnit_Framework_MockObject_Builder_InvocationMocker();
+        }
+
+        /**
+         * @return PHPUnit_Framework_MockObject_Builder_InvocationMocker
+         */
+        public function method($constraint)
         {
             return new PHPUnit_Framework_MockObject_Builder_InvocationMocker();
         }

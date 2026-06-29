@@ -30,4 +30,14 @@ public class MockeryAnnotatorTest extends LightJavaCodeInsightFixtureTestCase {
         myFixture.configureByFiles("annotator/fixtures/MockeryAnnotatorProtectedMethod.php", "common/fixture/MockeryClasses.php");
         myFixture.checkHighlighting(true, false, false, false);
     }
+
+    public void testArrayScopeAnnotation() {
+        myFixture.configureByFiles("annotator/fixtures/MockeryAnnotatorArrayScopes.php", "common/fixture/MockeryClasses.php");
+        myFixture.checkHighlighting(true, false, false, false);
+    }
+
+    public void testLegacyMethodAnnotation() {
+        myFixture.configureByFiles("annotator/fixtures/MockeryAnnotatorLegacyMethods.php", "common/fixture/MockeryClasses.php");
+        myFixture.checkHighlighting(true, false, false, false);
+    }
 }

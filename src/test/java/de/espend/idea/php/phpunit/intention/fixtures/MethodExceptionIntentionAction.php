@@ -6,3 +6,21 @@ namespace PHPUnit\Framework
     {
     }
 }
+
+namespace Foo
+{
+    class ExpectedException extends \Exception
+    {
+    }
+
+    class Service
+    {
+        /**
+         * @throws \Foo\ExpectedException
+         */
+        public function throwsExpectedException()
+        {
+            throw new ExpectedException();
+        }
+    }
+}
