@@ -7,7 +7,6 @@ plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.4.0"
     id("org.jetbrains.intellij.platform") version "2.16.0"
-    id("org.jetbrains.changelog") version "2.5.0"
 }
 
 group = properties("pluginGroup")
@@ -85,11 +84,6 @@ intellijPlatform {
     }
 }
 
-changelog {
-    version.set(properties("pluginVersion"))
-    groups.set(emptyList())
-}
-
 tasks {
     // Set the JVM compatibility versions
     properties("javaVersion").let {
@@ -113,13 +107,6 @@ tasks {
         sinceBuild.set(properties("pluginSinceBuild"))
         untilBuild.set(properties("pluginUntilBuild"))
         changeNotes.set(file("src/main/resources/META-INF/change-notes.html").readText().replace("<html>", "").replace("</html>", ""))
-
-        // Get the latest available change notes from the changelog file
-        // changeNotes.set(provider {
-        //     changelog.run {
-        //         getOrNull(properties("pluginVersion")) ?: getLatest()
-        //     }.toHTML()
-        // })
     }
 
     signPlugin {
@@ -129,7 +116,6 @@ tasks {
     }
 
     publishPlugin {
-        // dependsOn("patchChangelog")
         token.set(System.getenv("PUBLISH_TOKEN"))
         // pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
