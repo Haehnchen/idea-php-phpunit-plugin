@@ -1,12 +1,18 @@
 # Changelog
 
 ## Versions
-* 7.x: PhpStorm 2022.3+
+* 8.x: PhpStorm 2025.3+
+* 7.x: PhpStorm 2022.3+ (no support)
 * 5.x: PhpStorm 2020.2+ (no support)
 * 4.x: PhpStorm 2020.1+ (no support)
 * 3.x: PhpStorm 2017.3+ (no support)
 * 2.x: PhpStorm 2017.1+ (no support)
 * 1.x: PhpStorm 2016.1+ (no support)
+
+## 8.0
+* Fix reported deprecations via inspections (Daniel Espendiller)
+* Upgrade build and plugin dependencies to support IntelliJ 2026.x (Daniel Espendiller)
+* Replace `org.apache.commons.lang.StringUtils` with `org.apache.commons.lang3.StringUtils` (Ilia Smirnov)
 
 ## 7.1
 * Add inspection for mocked deprecation methods (Daniel Espendiller)
