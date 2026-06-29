@@ -1,30 +1,28 @@
-package com.phpuaca.filter;
+package de.espend.idea.php.phpunit.utils.mockstring;
 
 import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocProperty;
 import com.jetbrains.php.lang.psi.elements.Field;
 import com.jetbrains.php.lang.psi.elements.Method;
+import com.jetbrains.php.lang.psi.elements.MethodReference;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.lang.psi.elements.PhpModifier;
+import de.espend.idea.php.phpunit.utils.mockstring.FilterConfig.Item;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-abstract public class Filter {
+public abstract class Filter {
 
     private boolean isMethodsAllowed = false;
     private boolean isFieldsAllowed = false;
 
-    private List<String> allowedMethods = new ArrayList<String>();
-    private List<String> allowedFields = new ArrayList<String>();
-    private List<String> allowedModifiers = new ArrayList<String>();
-    private List<String> disallowedMethods = new ArrayList<String>();
-    private List<String> describedMethods = new ArrayList<String>();
+    private final List<String> allowedMethods = new ArrayList<>();
+    private final List<String> allowedModifiers = new ArrayList<>();
+    private final List<String> disallowedMethods = new ArrayList<>();
+    private final List<String> describedMethods = new ArrayList<>();
 
     private PhpClass phpClass;
-
-    public Filter(FilterContext context) {
-    }
 
     public void allowMethod(String methodName) {
         allowMethods();
@@ -87,7 +85,7 @@ abstract public class Filter {
     }
 
     protected boolean isFieldAllowed(String fieldName) {
-        return isFieldsAllowed && (allowedFields.isEmpty() || allowedFields.contains(fieldName));
+        return isFieldsAllowed;
     }
 
     public boolean isFieldAllowed(Field field) {
@@ -108,5 +106,17 @@ abstract public class Filter {
 
     public PhpClass getPhpClass() {
         return phpClass;
+    }
+
+    public record Context(@NotNull Item filterConfigItem, @NotNull MethodReference methodReference) {
+        @NotNull
+        public Item getFilterConfigItem() {
+            return filterConfigItem;
+        }
+
+        @NotNull
+        public MethodReference getMethodReference() {
+            return methodReference;
+        }
     }
 }

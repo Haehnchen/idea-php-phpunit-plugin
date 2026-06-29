@@ -1,4 +1,4 @@
-package com.phpuaca.helper;
+package de.espend.idea.php.phpunit.utils.mockstring;
 
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -10,13 +10,16 @@ import com.jetbrains.php.phpunit.PhpUnitUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class AvailabilityHelper {
+public final class AvailabilityHelper {
 
-    public boolean checkFile(@NotNull PsiFile psiFile) {
+    private AvailabilityHelper() {
+    }
+
+    public static boolean checkFile(@NotNull PsiFile psiFile) {
         return PhpUnitUtil.isPhpUnitTestFile(psiFile);
     }
 
-    public boolean checkScope(@Nullable PsiElement psiElement) {
+    public static boolean checkScope(@Nullable PsiElement psiElement) {
         if (!(psiElement instanceof StringLiteralExpression)) {
             return false;
         }

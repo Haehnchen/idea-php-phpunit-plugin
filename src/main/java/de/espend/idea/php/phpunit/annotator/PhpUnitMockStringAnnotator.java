@@ -1,4 +1,4 @@
-package com.phpuaca.annotator;
+package de.espend.idea.php.phpunit.annotator;
 
 import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
@@ -8,18 +8,25 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.psi.PsiElement;
 import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
-import com.phpuaca.filter.Filter;
-import com.phpuaca.filter.FilterFactory;
-import com.phpuaca.helper.AvailabilityHelper;
+import de.espend.idea.php.phpunit.utils.mockstring.AvailabilityHelper;
+import de.espend.idea.php.phpunit.utils.mockstring.Filter;
+import de.espend.idea.php.phpunit.utils.mockstring.FilterFactory;
 import org.jetbrains.annotations.NotNull;
 
-public class StringAnnotator implements Annotator {
+/**
+ * Warns on invalid PHPUnit mock method strings.
+ *
+ * <pre>
+ * $this->getMock(Foo::class, ['method']);
+ * PHPUnit_Helper::callProtectedMethod(Foo::class, 'protectedMethod');
+ * </pre>
+ */
+public class PhpUnitMockStringAnnotator implements Annotator {
 
     @Override
     public void annotate(@NotNull PsiElement psiElement, @NotNull AnnotationHolder annotationHolder) {
-        AvailabilityHelper availabilityHelper = new AvailabilityHelper();
-        if (availabilityHelper.checkFile(psiElement.getContainingFile()) && availabilityHelper.checkScope(psiElement)) {
-            Filter filter = FilterFactory.getInstance().getFilter(psiElement);
+        if (AvailabilityHelper.checkFile(psiElement.getContainingFile()) && AvailabilityHelper.checkScope(psiElement)) {
+            Filter filter = FilterFactory.getFilter(psiElement);
             if (filter != null) {
                 PhpClass phpClass = filter.getPhpClass();
                 if (phpClass != null) {
@@ -30,12 +37,12 @@ public class StringAnnotator implements Annotator {
                     if (method == null) {
                         if (phpClass.findFieldByName(name, false) == null) {
                             annotationHolder.newAnnotation(HighlightSeverity.WARNING, "Method '" + name + "' not found in class " + phpClass.getName())
-                                .range(annotationTextRange).create();
+                                    .range(annotationTextRange).create();
                         }
                     } else {
                         if (!filter.isMethodAllowed(method)) {
                             annotationHolder.newAnnotation(HighlightSeverity.WARNING, "Method '" + name + "' is not allowed to use here")
-                                .range(annotationTextRange).create();
+                                    .range(annotationTextRange).create();
                         }
                     }
                 }

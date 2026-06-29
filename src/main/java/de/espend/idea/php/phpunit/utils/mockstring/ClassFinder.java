@@ -1,22 +1,21 @@
-package com.phpuaca.filter.util;
+package de.espend.idea.php.phpunit.utils.mockstring;
 
 import com.jetbrains.php.lang.psi.elements.MethodReference;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.lang.psi.elements.Variable;
-import com.phpuaca.filter.FilterConfigItem;
-import com.phpuaca.filter.FilterFactory;
-import com.phpuaca.util.PhpClassResolver;
-import com.phpuaca.util.PhpMethodChain;
-import com.phpuaca.util.PhpVariable;
+import de.espend.idea.php.phpunit.utils.mockstring.FilterConfig.Item;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-final public class ClassFinder {
+public final class ClassFinder {
+
+    private ClassFinder() {
+    }
 
     @Nullable
-    public Result find(@NotNull MethodReference methodReference) {
+    public static Result find(@NotNull MethodReference methodReference) {
         String methodNameToFind = "setMethods";
-        MethodReference mockBuilderMethodReference = (new PhpMethodChain(methodReference)).findMethodReference("getMockBuilder");
+        MethodReference mockBuilderMethodReference = MockStringPsiUtil.findMethodReference(methodReference, "getMockBuilder");
         if (mockBuilderMethodReference == null) {
             String methodName = methodReference.getName();
             if (methodName != null && (methodName.startsWith("getMock") || methodName.startsWith("createMock"))) {
@@ -33,12 +32,12 @@ final public class ClassFinder {
             return null;
         }
 
-        FilterConfigItem filterConfigItem = FilterFactory.getInstance().getConfig().getItem(methodNameToFind);
+        Item filterConfigItem = FilterFactory.getConfig().getItem(methodNameToFind);
         if (filterConfigItem == null) {
             return null;
         }
 
-        PhpClass phpClass = (new PhpClassResolver()).resolveByMethodReferenceContainingParameterListWithClassReference(mockBuilderMethodReference);
+        PhpClass phpClass = MockStringPsiUtil.resolveClassFromMethodReference(mockBuilderMethodReference);
         if (phpClass == null) {
             return null;
         }
@@ -47,20 +46,13 @@ final public class ClassFinder {
     }
 
     @Nullable
-    public Result find(@NotNull Variable variable) {
-        MethodReference methodReference = (new PhpVariable(variable)).findClosestAssignment();
+    public static Result find(@NotNull Variable variable) {
+        MethodReference methodReference = MockStringPsiUtil.findClosestAssignment(variable);
         return methodReference == null ? null : find(methodReference);
     }
 
-    public class Result {
-        private PhpClass phpClass;
-        private int parameterNumber;
-
-        public Result(@NotNull PhpClass phpClass, int parameterNumber) {
-            this.phpClass = phpClass;
-            this.parameterNumber = parameterNumber;
-        }
-
+    public record Result(@NotNull PhpClass phpClass, int parameterNumber) {
+        @NotNull
         public PhpClass getPhpClass() {
             return phpClass;
         }

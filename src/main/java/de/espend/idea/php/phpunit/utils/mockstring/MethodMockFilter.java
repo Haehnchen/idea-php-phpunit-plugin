@@ -1,17 +1,15 @@
-package com.phpuaca.filter;
+package de.espend.idea.php.phpunit.utils.mockstring;
 
 import com.jetbrains.php.lang.psi.elements.MethodReference;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.lang.psi.elements.PhpModifier;
-import com.phpuaca.util.PhpClassResolver;
+import de.espend.idea.php.phpunit.utils.mockstring.Filter.Context;
 
 public class MethodMockFilter extends Filter {
 
-    public MethodMockFilter(FilterContext context) {
-        super(context);
-
+    public MethodMockFilter(Context context) {
         MethodReference methodReference = context.getMethodReference();
-        PhpClass phpClass = (new PhpClassResolver()).resolveByMethodReferenceContainingParameterListWithClassReference(methodReference);
+        PhpClass phpClass = MockStringPsiUtil.resolveClassFromMethodReference(methodReference);
         if (phpClass == null) {
             return;
         }

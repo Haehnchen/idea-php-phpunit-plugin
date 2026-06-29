@@ -63,14 +63,14 @@
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <annotator language="PHP" implementationClass="com.phpuaca.annotator.StringAnnotator"/>
+        <annotator language="PHP" implementationClass="de.espend.idea.php.phpunit.annotator.PhpUnitMockStringAnnotator"/>
 
         <annotator language="PHP" implementationClass="de.espend.idea.php.phpunit.annotator.MockeryAnnotator"/>
 
-        <completion.confidence language="PHP" implementationClass="com.phpuaca.completion.StringCompletionConfidence"
+        <completion.confidence language="PHP" implementationClass="de.espend.idea.php.phpunit.completion.PhpUnitMockStringCompletionConfidence"
                                id="asTrue" order="first"/>
 
-        <completion.contributor language="PHP" implementationClass="com.phpuaca.completion.StringCompletionContributor"/>
+        <completion.contributor language="PHP" implementationClass="de.espend.idea.php.phpunit.completion.PhpUnitMockStringCompletionContributor"/>
 
         <completion.contributor language="PHP" implementationClass="de.espend.idea.php.phpunit.completion.PhpUnitCompletionContributor"/>
 
@@ -80,7 +80,7 @@
 
         <psi.referenceContributor language="PHP" implementation="de.espend.idea.php.phpunit.reference.MockeryReferenceContributor"/>
 
-        <psi.referenceContributor language="PHP" implementation="com.phpuaca.reference.StringReferenceContributor"/>
+        <psi.referenceContributor language="PHP" implementation="de.espend.idea.php.phpunit.reference.PhpUnitMockStringReferenceContributor"/>
 
         <psi.referenceContributor language="PHP" implementation="de.espend.idea.php.phpunit.reference.PhpUnitCreatePartialMock$ReferenceContributor"/>
         <completion.contributor language="PHP" implementationClass="de.espend.idea.php.phpunit.reference.PhpUnitCreatePartialMock$Completion"/>

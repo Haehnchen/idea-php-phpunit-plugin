@@ -1,16 +1,15 @@
-package com.phpuaca.filter;
+package de.espend.idea.php.phpunit.utils.mockstring;
 
 import com.jetbrains.php.lang.psi.elements.MethodReference;
 import com.jetbrains.php.lang.psi.elements.ParameterList;
 import com.jetbrains.php.lang.psi.elements.PhpModifier;
-import com.phpuaca.filter.util.ClassFinder;
-import com.phpuaca.util.PhpArrayParameter;
+import de.espend.idea.php.phpunit.utils.mockstring.Filter.Context;
+
+import java.util.List;
 
 public class MockBuilderFilter extends Filter {
 
-    public MockBuilderFilter(FilterContext context) {
-        super(context);
-
+    public MockBuilderFilter(Context context) {
         allowMethods();
         allowModifier(PhpModifier.PUBLIC_ABSTRACT_DYNAMIC);
         allowModifier(PhpModifier.PUBLIC_IMPLEMENTED_DYNAMIC);
@@ -19,7 +18,7 @@ public class MockBuilderFilter extends Filter {
 
         MethodReference methodReference = context.getMethodReference();
 
-        ClassFinder.Result classFinderResult = (new ClassFinder()).find(methodReference);
+        ClassFinder.Result classFinderResult = ClassFinder.find(methodReference);
         if (classFinderResult != null) {
             setPhpClass(classFinderResult.getPhpClass());
         }
@@ -29,9 +28,9 @@ public class MockBuilderFilter extends Filter {
 
         ParameterList parameterList = methodReference.getParameterList();
         if (parameterList != null) {
-            PhpArrayParameter phpArrayParameter = PhpArrayParameter.create(parameterList, context.getFilterConfigItem().getParameterNumber());
-            if (phpArrayParameter != null) {
-                describeMethods(phpArrayParameter.getValues());
+            List<String> methodNames = MockStringPsiUtil.getArrayParameterValues(parameterList, context.getFilterConfigItem().getParameterNumber());
+            if (methodNames != null) {
+                describeMethods(methodNames);
             }
         }
     }

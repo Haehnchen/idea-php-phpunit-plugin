@@ -1,25 +1,23 @@
-package com.phpuaca.filter;
+package de.espend.idea.php.phpunit.utils.mockstring;
 
 import com.intellij.psi.util.PsiTreeUtil;
 import com.jetbrains.php.lang.psi.elements.MethodReference;
 import com.jetbrains.php.lang.psi.elements.ParameterList;
 import com.jetbrains.php.lang.psi.elements.PhpModifier;
 import com.jetbrains.php.lang.psi.elements.Variable;
-import com.phpuaca.filter.util.ClassFinder;
-import com.phpuaca.util.PhpArrayParameter;
-import com.phpuaca.util.PhpMethodChain;
-import com.phpuaca.util.PhpVariable;
+import de.espend.idea.php.phpunit.utils.mockstring.ClassFinder.Result;
+import de.espend.idea.php.phpunit.utils.mockstring.Filter.Context;
+
+import java.util.List;
 
 public class InvocationMockerFilter extends Filter {
 
-    public InvocationMockerFilter(FilterContext context) {
-        super(context);
-
+    public InvocationMockerFilter(Context context) {
         Variable variable = (Variable) PsiTreeUtil.getDeepestFirst(context.getMethodReference()).getParent();
-        MethodReference methodReference = (new PhpVariable(variable)).findClosestAssignment();
+        MethodReference methodReference = MockStringPsiUtil.findClosestAssignment(variable);
 
         if (methodReference != null) {
-            ClassFinder.Result classFinderResult = (new ClassFinder()).find(methodReference);
+            Result classFinderResult = ClassFinder.find(methodReference);
             if (classFinderResult != null) {
                 allowModifier(PhpModifier.PUBLIC_ABSTRACT_DYNAMIC);
                 allowModifier(PhpModifier.PUBLIC_IMPLEMENTED_DYNAMIC);
@@ -28,7 +26,7 @@ public class InvocationMockerFilter extends Filter {
 
                 setPhpClass(classFinderResult.getPhpClass());
 
-                MethodReference definitionMethodReference = (new PhpMethodChain(methodReference)).findMethodReference("setMethods");
+                MethodReference definitionMethodReference = MockStringPsiUtil.findMethodReference(methodReference, "setMethods");
                 if (definitionMethodReference == null) {
                     definitionMethodReference = methodReference;
                     allowMethods();
@@ -36,9 +34,9 @@ public class InvocationMockerFilter extends Filter {
 
                 ParameterList parameterList = definitionMethodReference.getParameterList();
                 if (parameterList != null) {
-                    PhpArrayParameter phpArrayParameter = PhpArrayParameter.create(parameterList, classFinderResult.getParameterNumber());
-                    if (phpArrayParameter != null) {
-                        allowMethods(phpArrayParameter.getValues());
+                    List<String> methodNames = MockStringPsiUtil.getArrayParameterValues(parameterList, classFinderResult.getParameterNumber());
+                    if (methodNames != null) {
+                        allowMethods(methodNames);
                     }
                 }
             }
