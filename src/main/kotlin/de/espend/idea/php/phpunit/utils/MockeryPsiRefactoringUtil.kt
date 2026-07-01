@@ -36,7 +36,6 @@ object MockeryPsiRefactoringUtil {
     /**
      * @return True if once() is found
      */
-    @JvmStatic
     fun checkForOnceInMethodSequence(startingMethod: MethodReference): Boolean {
         return checkForOnceInMethodSequence(getMethodSequence(startingMethod))
     }
@@ -55,7 +54,6 @@ object MockeryPsiRefactoringUtil {
         return false
     }
 
-    @JvmStatic
     fun checkForCountInMethodSequence(startingMethod: MethodReference): Boolean {
         return checkForCountInMethodSequence(getMethodSequence(startingMethod))
     }
@@ -86,7 +84,6 @@ object MockeryPsiRefactoringUtil {
         return if (methodReference.nameNode != null) methodReference.nameNode!!.psi else null
     }
 
-    @JvmStatic
     fun convertMultipleParametersToArrayParameter(project: Project, baseMethod: MethodReference): MethodReference? {
         var currentBaseMethod = baseMethod
         if (currentBaseMethod.parameterList == null) {
@@ -135,7 +132,6 @@ object MockeryPsiRefactoringUtil {
         return currentBaseMethod
     }
 
-    @JvmStatic
     fun replaceShouldReceiveFromMethodReference(
         project: Project,
         method: MethodReference,
@@ -267,7 +263,6 @@ object MockeryPsiRefactoringUtil {
         statementElement.delete()
     }
 
-    @JvmStatic
     fun replaceShouldNotReceive(
         project: Project,
         method: MethodReference,

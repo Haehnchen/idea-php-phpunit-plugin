@@ -77,7 +77,6 @@ class MockProphecyTypeProvider : PhpTypeProvider4 {
     companion object {
         const val CHAR: Char = '\u5143'
 
-        @JvmField
         var TRIM_KEY: Char = '\u0192'
 
         private val PHPUNIT_CLASSES: Set<String> = setOf(

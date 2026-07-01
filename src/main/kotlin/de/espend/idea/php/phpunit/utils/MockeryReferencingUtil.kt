@@ -13,7 +13,6 @@ import org.apache.commons.lang3.ArrayUtils
 import org.apache.commons.lang3.StringUtils
 
 object MockeryReferencingUtil {
-    @JvmField
     val expectedClassNamesAndMethods: Array<Array<String>> = arrayOf(
         arrayOf("Mockery_MockInterface", "expects"),
         arrayOf("Mockery_LegacyMockInterface", "shouldReceive"),
@@ -29,7 +28,6 @@ object MockeryReferencingUtil {
         arrayOf("Mockery\\MockInterface", "allows"),
     )
 
-    @JvmField
     val allowedChainClasses: Array<String> = arrayOf(
         "Mockery_MockInterface",
         "Mockery_LegacyMockInterface",
@@ -41,7 +39,6 @@ object MockeryReferencingUtil {
      * $foo = Mockery::mock('Foobar')
      * $foo->expects('<caret>')
      */
-    @JvmStatic
     fun findMockeryMockParametersOnParameterScope(psiElement: StringLiteralExpression): Array<String>? {
         return findMockeryMockParametersOnParameterScopeInternal(psiElement)
     }
@@ -71,7 +68,6 @@ object MockeryReferencingUtil {
      * 'secondCalledMethod' => 'mocked result']);</code>
      * If psi element is 'calledMethod'
      */
-    @JvmStatic
     fun findMockeryMockParametersOnArrayHashScope(psiElement: StringLiteralExpression): Array<String>? {
         val phpPsiElement = psiElement.parent
         if (phpPsiElement is PhpPsiElement) {
@@ -91,7 +87,6 @@ object MockeryReferencingUtil {
         return emptyArray()
     }
 
-    @JvmStatic
     fun findMockeryMockParametersOnArrayElementScope(psiElement: StringLiteralExpression): Array<String>? {
         val phpPsiElement = psiElement.parent
         if (phpPsiElement is PhpPsiElement) {
@@ -106,7 +101,6 @@ object MockeryReferencingUtil {
         return emptyArray()
     }
 
-    @JvmStatic
     fun findMockeryMockParametersOnPartialMockStringDeclarationScope(psiElement: PsiElement): Array<String>? {
         val parameterList = psiElement.parent
         if (parameterList !is ParameterList) {
@@ -133,7 +127,6 @@ object MockeryReferencingUtil {
         return emptyArray()
     }
 
-    @JvmStatic
     fun findMockeryMockParametersOnPartialMockConcatenationDeclarationScope(psiElement: PsiElement): Array<String>? {
         val concatenationExpression = psiElement.parent
         if (concatenationExpression !is ConcatenationExpression) {

@@ -43,7 +43,6 @@ class CreateMockMethodReferenceProcessor : ChainVisitorUtil.ChainProcessorInterf
     }
 
     companion object {
-        @JvmStatic
         fun createParameter(methodReference: MethodReference): String? {
             val processor = CreateMockMethodReferenceProcessor()
             ChainVisitorUtil.visit(methodReference, processor)

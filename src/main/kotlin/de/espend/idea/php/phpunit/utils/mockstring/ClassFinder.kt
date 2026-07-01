@@ -5,7 +5,6 @@ import com.jetbrains.php.lang.psi.elements.PhpClass
 import com.jetbrains.php.lang.psi.elements.Variable
 
 object ClassFinder {
-    @JvmStatic
     fun find(methodReference: MethodReference): Result? {
         var methodNameToFind = "setMethods"
         var mockBuilderMethodReference = MockStringPsiUtil.findMethodReference(methodReference, "getMockBuilder")
@@ -38,7 +37,6 @@ object ClassFinder {
         return Result(phpClass, filterConfigItem.parameterNumber)
     }
 
-    @JvmStatic
     fun find(variable: Variable): Result? {
         val methodReference = MockStringPsiUtil.findClosestAssignment(variable)
         return if (methodReference == null) null else find(methodReference)

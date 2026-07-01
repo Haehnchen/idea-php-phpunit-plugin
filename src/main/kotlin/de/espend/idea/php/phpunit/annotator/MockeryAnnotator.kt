@@ -89,7 +89,7 @@ class MockeryAnnotator : Annotator {
 
                         if (!allMethodNames.contains(contents)) {
                             if (classNames.size == 1) {
-                                val className = classNames.toTypedArray()[0].toString()
+                                val className = classNames.first()
                                 annotationHolder.newAnnotation(
                                     HighlightSeverity.WARNING,
                                     "Method '$contents' not found in class $className"

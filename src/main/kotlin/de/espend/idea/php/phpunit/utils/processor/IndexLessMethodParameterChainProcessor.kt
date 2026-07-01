@@ -21,7 +21,6 @@ class IndexLessMethodParameterChainProcessor(vararg methods: String) : ChainVisi
     }
 
     companion object {
-        @JvmStatic
         fun createParameter(methodReference: MethodReference, vararg methods: String): String? {
             val processor = IndexLessMethodParameterChainProcessor(*methods)
             ChainVisitorUtil.visit(methodReference, processor)

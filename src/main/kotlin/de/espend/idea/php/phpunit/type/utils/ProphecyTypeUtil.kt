@@ -14,7 +14,6 @@ object ProphecyTypeUtil {
      * $x->prophesize('foobar')->foo()
      * $x->prophesize(Foo::class)->foo()
      */
-    @JvmStatic
     fun getLocalProphesizeType(methodReference: MethodReference): String? {
         return IndexLessMethodParameterChainProcessor.createParameter(methodReference, "prophesize")
     }

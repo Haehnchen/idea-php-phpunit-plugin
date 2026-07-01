@@ -9,12 +9,10 @@ import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 import com.jetbrains.php.phpunit.PhpUnitUtil
 
 object AvailabilityHelper {
-    @JvmStatic
     fun checkFile(psiFile: PsiFile): Boolean {
         return PhpUnitUtil.isPhpUnitTestFile(psiFile)
     }
 
-    @JvmStatic
     fun checkScope(psiElement: PsiElement?): Boolean {
         if (psiElement !is StringLiteralExpression) {
             return false

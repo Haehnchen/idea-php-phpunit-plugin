@@ -22,7 +22,6 @@ class MockStringPsiUtil private constructor() {
     companion object {
         private const val PARAMETER_NOT_FOUND = -2
 
-        @JvmStatic
         fun resolveMethod(methodReference: MethodReference): Method? {
             val resolvedCollection = methodReference.multiResolveStrict(Method::class.java)
             if (resolvedCollection.isNotEmpty()) {
@@ -32,7 +31,6 @@ class MockStringPsiUtil private constructor() {
             return null
         }
 
-        @JvmStatic
         fun findMethodReference(entryPoint: MethodReference, methodName: String): MethodReference? {
             val result = arrayOfNulls<MethodReference>(1)
             ChainVisitorUtil.visit(entryPoint, object : ChainVisitorUtil.ChainProcessorInterface {
@@ -49,7 +47,6 @@ class MockStringPsiUtil private constructor() {
             return result[0]
         }
 
-        @JvmStatic
         fun findClosestAssignment(variable: Variable): MethodReference? {
             val variableName = variable.name
             var cursor: PsiElement? = variable
@@ -80,7 +77,7 @@ class MockStringPsiUtil private constructor() {
                     }
 
                     val statementVariableName = statementVariable.name
-                    if (statementVariableName == null || statementVariableName != variableName) {
+                    if (statementVariableName != variableName) {
                         continue
                     }
 
@@ -94,13 +91,11 @@ class MockStringPsiUtil private constructor() {
             return null
         }
 
-        @JvmStatic
         fun resolveClassFromMethodReference(methodReference: MethodReference): PhpClass? {
             val parameterList = methodReference.parameterList
             return if (parameterList == null) null else resolveClassFromParameterList(parameterList)
         }
 
-        @JvmStatic
         fun resolveClassFromParameterList(parameterList: ParameterList): PhpClass? {
             val parameter = parameterList.getParameter(0)
             if (parameter == null) {
@@ -125,13 +120,11 @@ class MockStringPsiUtil private constructor() {
             return null
         }
 
-        @JvmStatic
         fun resolveClassFromVariable(variable: Variable): PhpClass? {
             val classFinderResult = ClassFinder.find(variable)
             return if (classFinderResult == null) null else classFinderResult.phpClass
         }
 
-        @JvmStatic
         fun getParameterNumber(parameter: PsiElement): Int {
             val parameterList = PsiTreeUtil.getParentOfType(parameter, ParameterList::class.java)
             if (parameterList == null) {
@@ -142,7 +135,6 @@ class MockStringPsiUtil private constructor() {
             return if (parameterIndex == null) PARAMETER_NOT_FOUND else parameterIndex + 1
         }
 
-        @JvmStatic
         fun getArrayParameterValues(parameterList: ParameterList, parameterNumber: Int): List<String>? {
             val parameter = getParameter(parameterList, parameterNumber)
             if (parameter !is ArrayCreationExpression) {

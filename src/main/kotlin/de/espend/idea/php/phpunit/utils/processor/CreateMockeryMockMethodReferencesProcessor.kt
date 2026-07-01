@@ -64,7 +64,6 @@ class CreateMockeryMockMethodReferencesProcessor : ChainVisitorUtil.ChainProcess
          * @param methodReference the psiElement we are finding a target for
          * @return the name of the class for the target of the reference
          */
-        @JvmStatic
         fun createParameters(methodReference: MethodReference): Array<String>? {
             val processor = CreateMockeryMockMethodReferencesProcessor()
             ChainVisitorUtil.visit(methodReference, processor)

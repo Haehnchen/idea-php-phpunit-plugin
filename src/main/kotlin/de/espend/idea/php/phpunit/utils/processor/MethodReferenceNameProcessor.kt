@@ -26,7 +26,6 @@ class MethodReferenceNameProcessor private constructor(private val methodName: S
     }
 
     companion object {
-        @JvmStatic
         fun createParameterWithCurrent(methodReference: MethodReference, vararg methodNames: String): String? {
             for (methodName in methodNames) {
                 val processor = MethodReferenceNameProcessor(methodName)

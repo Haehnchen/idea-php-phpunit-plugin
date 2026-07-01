@@ -24,7 +24,6 @@ object PhpTypeProviderUtil {
      *
      * foo($this->foo), foo('foobar')
      */
-    @JvmStatic
     fun getReferenceSignatureByFirstParameter(functionReference: FunctionReference): String? {
         val parameters = functionReference.parameters
         if (parameters.isEmpty()) {
@@ -62,7 +61,6 @@ object PhpTypeProviderUtil {
      *
      * foo($this->foo), foo('foobar')
      */
-    @JvmStatic
     fun getReferenceSignatureByFirstParameter(functionReference: FunctionReference, trimKey: Char): String? {
         val refSignature = functionReference.signature
         if (StringUtil.isEmpty(refSignature)) {
@@ -102,7 +100,6 @@ object PhpTypeProviderUtil {
      * we can also pipe php references signatures and resolve them here
      * overwrite parameter to get string value
      */
-    @JvmStatic
     fun getResolvedParameter(phpIndex: PhpIndex, parameter: String): String? {
         return getResolvedParameter(phpIndex, parameter, null, 0)
     }
@@ -111,7 +108,6 @@ object PhpTypeProviderUtil {
      * we can also pipe php references signatures and resolve them here
      * overwrite parameter to get string value
      */
-    @JvmStatic
     fun getResolvedParameter(phpIndex: PhpIndex, parameter: String, visited: Set<String>?, depth: Int): String? {
         var resolvedParameter = parameter
 
@@ -145,7 +141,6 @@ object PhpTypeProviderUtil {
      * #M#x#M#C\FooBar.get?doctrine.odm.mongodb.document_manager.getRepository|
      * #M#x#M#C\FooBar.get?doctrine.odm.mongodb.document_manager.getRepository
      */
-    @JvmStatic
     fun getTypeSignature(phpIndex: PhpIndex, signature: String): Collection<PhpNamedElement> {
         if (!signature.contains("|")) {
             return phpIndex.getBySignature(signature, null, 0)
@@ -159,7 +154,6 @@ object PhpTypeProviderUtil {
         return elements
     }
 
-    @JvmStatic
     fun isMethodReferenceWithSpecificName(psiElement: PsiElement, methodName: String): Boolean {
         return psiElement is MethodReference && methodName == psiElement.name
     }

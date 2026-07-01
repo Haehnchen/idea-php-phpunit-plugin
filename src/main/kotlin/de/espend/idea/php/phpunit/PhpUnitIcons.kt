@@ -8,7 +8,6 @@ import javax.swing.Icon
  */
 class PhpUnitIcons {
     companion object {
-        @JvmField
         val PHPUNIT: Icon = IconLoader.getIcon("/icons/phpunit.svg", PhpUnitIcons::class.java)
     }
 }

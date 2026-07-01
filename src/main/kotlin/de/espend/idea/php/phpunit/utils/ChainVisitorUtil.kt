@@ -15,12 +15,10 @@ import com.jetbrains.php.lang.psi.elements.Variable
  * @author Daniel Espendiller <daniel@espendiller.net>
  */
 object ChainVisitorUtil {
-    @JvmStatic
     fun visit(methodReference: MethodReference, processor: ChainProcessorInterface, skipCurrent: Boolean) {
         visit(if (skipCurrent) methodReference.firstChild else methodReference, processor, 10)
     }
 
-    @JvmStatic
     fun visit(methodReference: MethodReference, processor: ChainProcessorInterface) {
         visit(methodReference, processor, true)
     }

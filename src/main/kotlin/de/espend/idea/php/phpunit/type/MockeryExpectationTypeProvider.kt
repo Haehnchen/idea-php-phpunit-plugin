@@ -79,7 +79,6 @@ class MockeryExpectationTypeProvider : PhpTypeProvider4 {
         const val TRIM_KEY: Char = '\u1644'
         const val TYPE_KEY: Char = '\u1645'
 
-        @JvmStatic
         fun getTrimKey(): Char {
             return TRIM_KEY
         }

@@ -16,12 +16,10 @@ import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
  */
 class PatternUtil {
     companion object {
-        @JvmStatic
         fun getMethodReferenceWithParameterInsideTokenStringPattern(): PsiElementPattern.Capture<PsiElement> {
             return PlatformPatterns.psiElement().withParent(getMethodReferenceWithParameterPattern())
         }
 
-        @JvmStatic
         fun getMethodReferenceWithParameterPattern(): PsiElementPattern.Capture<StringLiteralExpression> {
             return PlatformPatterns.psiElement(StringLiteralExpression::class.java)
                 .withParent(
@@ -30,12 +28,10 @@ class PatternUtil {
                 )
         }
 
-        @JvmStatic
         fun getMethodReferenceWithArrayHashInsideTokenStringPattern(): PsiElementPattern.Capture<PsiElement> {
             return PlatformPatterns.psiElement().withParent(getMethodReferenceWithArrayHashPattern())
         }
 
-        @JvmStatic
         fun getMethodReferenceWithArrayHashPattern(): PsiElementPattern.Capture<StringLiteralExpression> {
             return createPatternFromClassSequence(
                 StringLiteralExpression::class.java,
@@ -47,12 +43,10 @@ class PatternUtil {
             )
         }
 
-        @JvmStatic
         fun getMethodReferenceWithArrayElementInsideTokenStringPattern(): PsiElementPattern.Capture<PsiElement> {
             return PlatformPatterns.psiElement().withParent(getMethodReferenceWithArrayElementPattern())
         }
 
-        @JvmStatic
         fun getMethodReferenceWithArrayElementPattern(): PsiElementPattern.Capture<StringLiteralExpression> {
             return createPatternFromClassSequence(
                 StringLiteralExpression::class.java,
@@ -63,12 +57,10 @@ class PatternUtil {
             )
         }
 
-        @JvmStatic
         fun getMethodReferenceWithConcatenationInsideTokenStringPattern(): PsiElementPattern.Capture<PsiElement> {
             return PlatformPatterns.psiElement().withParent(getMethodReferenceWithConcatenationPattern())
         }
 
-        @JvmStatic
         fun getMethodReferenceWithConcatenationPattern(): PsiElementPattern.Capture<StringLiteralExpression> {
             return createPatternFromClassSequence(
                 StringLiteralExpression::class.java,
@@ -100,7 +92,6 @@ class PatternUtil {
         /**
          * "$this->createPartialMock(Foo::class, ['foobar']);"
          */
-        @JvmStatic
         fun getArrayParameterPattern(): PsiElementPattern.Capture<StringLiteralExpression> {
             return PlatformPatterns.psiElement(StringLiteralExpression::class.java)
                 .withParent(

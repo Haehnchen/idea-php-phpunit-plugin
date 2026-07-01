@@ -35,7 +35,6 @@ object FilterFactory {
             .add(FilterConfig.Item("PHPUnit_Helper", "callProtectedMethod", 2, MethodMockFilter::class.java))
     }
 
-    @JvmStatic
     fun getFilter(parameter: PsiElement): Filter? {
         var currentParameter = parameter
         val parentParameter = PsiTreeUtil.getParentOfType(currentParameter, ArrayCreationExpression::class.java)
@@ -86,7 +85,6 @@ object FilterFactory {
         return filter
     }
 
-    @JvmStatic
     fun getConfig(): FilterConfig {
         return FilterConfig(CONFIG)
     }

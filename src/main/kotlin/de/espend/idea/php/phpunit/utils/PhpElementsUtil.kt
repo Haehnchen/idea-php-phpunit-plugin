@@ -30,7 +30,6 @@ import org.apache.commons.lang3.StringUtils
  */
 class PhpElementsUtil {
     companion object {
-        @JvmStatic
         fun getStringValue(psiElement: PsiElement?): String? {
             return getStringValue(psiElement, 0)
         }
@@ -38,7 +37,6 @@ class PhpElementsUtil {
         /**
          * <code>Foo::class</code> to its class fqn include namespace
          */
-        @JvmStatic
         fun getClassConstantPhpFqn(classConstant: ClassConstantReference): String? {
             val classReference: PhpExpression? = classConstant.getClassReference()
             if (classReference !is PhpReference) {
@@ -52,7 +50,6 @@ class PhpElementsUtil {
         /**
          * <code>new Foo</code> to its class fqn include namespace
          */
-        @JvmStatic
         fun getNewExpressionPhpFqn(newExpression: NewExpression): String? {
             val classReference: PhpReference = newExpression.getClassReference() ?: return null
 
@@ -108,7 +105,6 @@ class PhpElementsUtil {
          * @param subjectClass eg DateTime
          * @param expectedClass eg DateTimeInterface
          */
-        @JvmStatic
         fun isInstanceOf(subjectClass: PhpClass, expectedClass: String): Boolean {
             return PhpType().add(expectedClass).isConvertibleFrom(
                 PhpType().add(subjectClass),
@@ -119,7 +115,6 @@ class PhpElementsUtil {
         /**
          * Resolves MethodReference and compare containing class against implementations instances
          */
-        @JvmStatic
         fun isMethodReferenceInstanceOf(methodReference: MethodReference, vararg expectedClassNameAsOr: String): Boolean {
             for (resolveResult in methodReference.multiResolve(false)) {
                 val resolve = resolveResult.element
@@ -148,7 +143,6 @@ class PhpElementsUtil {
          *
          * Note: only local file is taken so only direct instances are detected
          */
-        @JvmStatic
         fun isLocalResolveMethodReferenceInstanceOf(
             methodReference: MethodReference,
             vararg expectedClassNameAsOr: String
@@ -173,7 +167,6 @@ class PhpElementsUtil {
         /**
          * Get the position of the given element to its parent ParameterList
          */
-        @JvmStatic
         fun getParameterIndex(parameterList: ParameterList, parameter: PsiElement): Int? {
             val parameters = parameterList.parameters
 
@@ -191,7 +184,6 @@ class PhpElementsUtil {
         /**
          * Resolves MethodReference and compare containing class against implementations instances
          */
-        @JvmStatic
         fun isMethodReferenceInstanceOf(
             methodReference: MethodReference,
             expectedClassName: String,
@@ -204,7 +196,6 @@ class PhpElementsUtil {
             return isMethodReferenceInstanceOf(methodReference, expectedClassName)
         }
 
-        @JvmStatic
         fun insertUseIfNecessary(scope: PsiElement, fqnClasName: String): String? {
             var className = fqnClasName
             if (!className.startsWith("\\")) {
@@ -229,7 +220,6 @@ class PhpElementsUtil {
         /**
          * class "Foo" extends
          */
-        @JvmStatic
         fun getClassNamePattern(): PsiElementPattern.Capture<PsiElement> {
             return PlatformPatterns
                 .psiElement(PhpTokenTypes.IDENTIFIER)

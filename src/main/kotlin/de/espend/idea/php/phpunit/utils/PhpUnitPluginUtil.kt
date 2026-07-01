@@ -43,7 +43,6 @@ class PhpUnitPluginUtil {
          *
          * @param psiElement Elements are PhpClass or Method possible context
          */
-        @JvmStatic
         fun executeDebugRunner(psiElement: PsiElement) {
             val context = RunConfigurationProducer.getInstance(PhpUnitRuntimeConfigurationProducer::class.java)
                 .createConfigurationFromContext(ConfigurationContext(psiElement))
@@ -62,7 +61,6 @@ class PhpUnitPluginUtil {
          *
          * FooTest or on extends eg PHPUnit\Framework\TestCase
          */
-        @JvmStatic
         fun isTestClassWithoutIndexAccess(phpClass: PhpClass): Boolean {
             val name = phpClass.name
             if (name.endsWith("Test") || name.endsWith("Context")) {
@@ -122,7 +120,6 @@ class PhpUnitPluginUtil {
          * $foo = $this->createMock('Foobar')
          * $foo->method('<caret>')
          */
-        @JvmStatic
         fun findCreateMockParameterOnParameterScope(psiElement: StringLiteralExpression): String? {
             val parameterList = psiElement.parent
             if (parameterList is ParameterList) {
@@ -145,7 +142,6 @@ class PhpUnitPluginUtil {
         /**
          * Insert "expectException" for given scope (eg method)
          */
-        @JvmStatic
         fun insertExpectedException(function: Function, psiElement: PsiElement, exceptionClass: String) {
             val fqn = "\\" + StringUtils.stripStart(exceptionClass, "\\")
 
@@ -169,7 +165,6 @@ class PhpUnitPluginUtil {
             addScope.parent.addAfter(statement, addScope)
         }
 
-        @JvmStatic
         fun getMockableMethods(project: Project, parameter: String): Collection<LookupElement> {
             val elements: MutableCollection<LookupElement> = ArrayList()
 
@@ -185,7 +180,6 @@ class PhpUnitPluginUtil {
             return elements
         }
 
-        @JvmStatic
         fun isCreatePartialMockMethod(parentOfType: MethodReference): Boolean {
             return PhpElementsUtil.isMethodReferenceInstanceOf(parentOfType, "\\PHPUnit\\Framework\\TestCase", "createPartialMock")
                 || PhpElementsUtil.isMethodReferenceInstanceOf(parentOfType, "PHPUnit_Framework_TestCase", "createPartialMock")
