@@ -39,6 +39,16 @@ public class PhpUnitMockStringCompletionContributorTest extends PhpUnitLightCode
         );
     }
 
+    public void testGetMockBuilderSetMethodsProvidesMethodCompletionInArraySyntax() {
+        assertCompletionContains(
+                PhpFileType.INSTANCE,
+                createTestCase(
+                        "        $this->getMockBuilder(PhpUnitMockStringTarget::class)->setMethods(array('<caret>'));\n"
+                ),
+                "publicMethod"
+        );
+    }
+
     public void testGetMockBuilderSetMethodsSkipsConstructAndDestruct() {
         List<String> lookupStrings = getProviderLookupStrings(createTestCase(
                 "        $this->getMockBuilder(PhpUnitMockStringTarget::class)->setMethods(['<caret>']);\n"
@@ -64,6 +74,26 @@ public class PhpUnitMockStringCompletionContributorTest extends PhpUnitLightCode
                         "        $this->getMockClass(PhpUnitMockStringTarget::class, ['<caret>']);\n"
                 ),
                 "publicMethod"
+        );
+    }
+
+    public void testGetMockForAbstractClassSeventhParameterProvidesMethodCompletion() {
+        assertCompletionContains(
+                PhpFileType.INSTANCE,
+                createTestCase(
+                        "        $this->getMockForAbstractClass(PhpUnitMockAbstractTarget::class, [], '', true, true, true, ['<caret>']);\n"
+                ),
+                "publicMethod"
+        );
+    }
+
+    public void testGetMockForTraitSeventhParameterProvidesTraitMethodCompletion() {
+        assertCompletionContains(
+                PhpFileType.INSTANCE,
+                createTestCase(
+                        "        $this->getMockForTrait(PhpUnitMockTraitTarget::class, [], '', true, true, true, ['<caret>']);\n"
+                ),
+                "traitMethod"
         );
     }
 
@@ -103,6 +133,24 @@ public class PhpUnitMockStringCompletionContributorTest extends PhpUnitLightCode
                 ),
                 "protectedProperty"
         );
+    }
+
+    public void testPhpUnitHelperPropertyCompletionSkipsMethods() {
+        List<String> lookupStrings = getProviderLookupStrings(createTestCase(
+                "        PHPUnit_Helper::setProtectedPropertyValue(PhpUnitMockStringTarget::class, '<caret>');\n"
+        ));
+
+        assertLookupContains(lookupStrings, "protectedProperty");
+        assertLookupDoesNotContain(lookupStrings, "publicMethod", "protectedMethod");
+    }
+
+    public void testPhpUnitHelperCallProtectedMethodCompletionSkipsProperties() {
+        List<String> lookupStrings = getProviderLookupStrings(createTestCase(
+                "        PHPUnit_Helper::callProtectedMethod(PhpUnitMockStringTarget::class, '<caret>');\n"
+        ));
+
+        assertLookupContains(lookupStrings, "publicMethod", "protectedMethod");
+        assertLookupDoesNotContain(lookupStrings, "protectedProperty");
     }
 
     @NotNull

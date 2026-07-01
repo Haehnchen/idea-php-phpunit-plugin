@@ -40,3 +40,11 @@ namespace Prophecy\PhpUnit
         }
     }
 }
+
+namespace Prophecy
+{
+    class Prophet
+    {
+        function prophesize($className) {}
+    }
+}

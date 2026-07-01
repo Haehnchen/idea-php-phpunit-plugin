@@ -30,4 +30,10 @@ class MockeryAnnotatorArrayScopes extends MockeryTestCase
         $this->dependency->expects(['calledMethod' => 'nomethod'])->andReturns('mocked result');
         $this->dependency->expects(['<warning descr="Method 'nomethod' not found in class Dependency">nomethod</warning>' => 'result'])->andReturns('mocked result');
     }
+
+    public function testConcatenationScopeDoesNotAnnotatePartialString(): void
+    {
+        $method = 'called' . 'Method';
+        $this->dependency->expects($method)->andReturns('mocked result');
+    }
 }

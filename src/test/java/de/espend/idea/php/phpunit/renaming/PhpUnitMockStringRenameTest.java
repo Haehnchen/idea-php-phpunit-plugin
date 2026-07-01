@@ -42,6 +42,32 @@ public class PhpUnitMockStringRenameTest extends PhpUnitLightCodeInsightFixtureT
         );
     }
 
+    public void testRenameAtProtectedPropertyStringUpdatesOnlyThatStringLiteral() {
+        myFixture.configureByText("PhpUnitMockStringPropertyRenameTest.php", PHPUNIT_FIXTURE +
+                "class PhpUnitMockStringPropertyRenameTest extends \\PHPUnit_Framework_TestCase\n" +
+                "{\n" +
+                "    public function testReference()\n" +
+                "    {\n" +
+                "        PHPUnit_Helper::setProtectedPropertyValue(PhpUnitMockStringRenameSubject::class, 'secret<caret>Value');\n" +
+                "        $sameTextOutsideReference = 'secretValue';\n" +
+                "    }\n" +
+                "}\n"
+        );
+
+        WriteCommandAction.runWriteCommandAction(getProject(), (Runnable) () -> findPhpUnitMockStringReferenceAtCaret().handleElementRename("newName"));
+
+        myFixture.checkResult(PHPUNIT_FIXTURE +
+                "class PhpUnitMockStringPropertyRenameTest extends \\PHPUnit_Framework_TestCase\n" +
+                "{\n" +
+                "    public function testReference()\n" +
+                "    {\n" +
+                "        PHPUnit_Helper::setProtectedPropertyValue(PhpUnitMockStringRenameSubject::class, 'newName');\n" +
+                "        $sameTextOutsideReference = 'secretValue';\n" +
+                "    }\n" +
+                "}\n"
+        );
+    }
+
     private PhpUnitMockStringReference findPhpUnitMockStringReferenceAtCaret() {
         PsiElement psiElement = myFixture.getFile().findElementAt(myFixture.getCaretOffset());
         StringLiteralExpression stringLiteralExpression = PsiTreeUtil.getParentOfType(psiElement, StringLiteralExpression.class);
@@ -63,6 +89,8 @@ public class PhpUnitMockStringRenameTest extends PhpUnitLightCodeInsightFixtureT
     private static final String PHPUNIT_FIXTURE = "<?php\n" +
             "class PhpUnitMockStringRenameSubject\n" +
             "{\n" +
+            "    protected $secretValue;\n" +
+            "\n" +
             "    public function targetMethod()\n" +
             "    {\n" +
             "    }\n" +
@@ -76,6 +104,13 @@ public class PhpUnitMockStringRenameTest extends PhpUnitLightCodeInsightFixtureT
             "    protected function getMock($originalClassName, array $methods = array())\n" +
             "    {\n" +
             "        return new PHPUnit_Framework_MockObject_MockObject();\n" +
+            "    }\n" +
+            "}\n" +
+            "\n" +
+            "class PHPUnit_Helper\n" +
+            "{\n" +
+            "    public static function setProtectedPropertyValue($className, $propertyName, $value = null)\n" +
+            "    {\n" +
             "    }\n" +
             "}\n" +
             "\n" +

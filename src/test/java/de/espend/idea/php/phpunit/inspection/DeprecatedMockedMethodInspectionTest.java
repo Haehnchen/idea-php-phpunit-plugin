@@ -59,6 +59,20 @@ public class DeprecatedMockedMethodInspectionTest extends PhpUnitLightCodeInsigh
         );
     }
 
+    public void testDeprecationForMockedMethodViaCreateMockStringClassName() {
+        assertLocalInspectionContains("test2.php", "<?php\n" +
+                "class Foo extends \\PHPUnit\\Framework\\TestCase\n" +
+                "{\n" +
+                "   public function foobar()\n" +
+                "   {\n" +
+                "       $foo = $this->createMock('Foo\\Bar');\n" +
+                "       $foo->method('getFoobarD<caret>eprecated');\n" +
+                "   }\n" +
+                "}",
+            "Method 'getFoobarDeprecated' is deprecated"
+        );
+    }
+
     public void testDeprecationForMockedMethodViaDirectCreateMockChain() {
         assertLocalInspectionContains("test2.php", "<?php\n" +
                 "class Foo extends \\PHPUnit\\Framework\\TestCase\n" +

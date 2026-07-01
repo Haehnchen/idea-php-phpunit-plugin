@@ -76,6 +76,15 @@ public class RelatedTestCaseLineMarkerProviderTest extends PhpUnitLightCodeInsig
         assertNoLineMarker(psiFileFromText);
     }
 
+    public void testThatNonPhpUnitFakeTestClassDoesNotProvideALineMarker() {
+        PsiFile psiFileFromText = PhpPsiElementFactory.createPsiFileFromText(getProject(), "<?php\n" +
+            "namespace Foo\\Bar\\Car;\n" +
+            "class FakeTest {}\n"
+        );
+
+        assertNoLineMarker(psiFileFromText);
+    }
+
     private void assertNoLineMarker(PsiElement psiElement) {
         List<PsiElement> elements = collectPsiElementsRecursive(psiElement);
 

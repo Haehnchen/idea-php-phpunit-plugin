@@ -2,6 +2,7 @@ package de.espend.idea.php.phpunit.references;
 
 import com.intellij.patterns.ElementPattern;
 import com.intellij.patterns.PlatformPatterns;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -70,6 +71,23 @@ public class PhpUnitMockStringReferenceContributorTest extends PhpUnitLightCodeI
                         "}\n",
                 PlatformPatterns.psiElement(Method.class).withName("targetMethod")
         );
+    }
+
+    public void testReferenceRangeCoversOnlyTheMethodNameInsideQuotes() {
+        myFixture.configureByText("PhpUnitMockStringReferenceRangeTest.php", PHPUNIT_FIXTURE +
+                "class PhpUnitMockStringReferenceRangeTest extends \\PHPUnit_Framework_TestCase\n" +
+                "{\n" +
+                "    public function testReference()\n" +
+                "    {\n" +
+                "        $mock = $this->createMock(PhpUnitMockStringReferenceSubject::class);\n" +
+                "        $mock->method('target<caret>Method');\n" +
+                "    }\n" +
+                "}\n"
+        );
+
+        TextRange rangeInElement = findPhpUnitMockStringReferenceAtCaret().getRangeInElement();
+
+        assertEquals(new TextRange(1, "'targetMethod'".length() - 1), rangeInElement);
     }
 
     public void testDoesNotProvideReferenceOutsidePhpUnitTestFile() {

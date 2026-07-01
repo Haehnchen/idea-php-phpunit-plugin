@@ -60,6 +60,15 @@ public class MockProphecyTypeProviderTest extends PhpUnitLightCodeInsightFixture
         );
     }
 
+    public void testResolveForPhpunitGetMockClass() {
+        assertPhpReferenceResolveTo(PhpFileType.INSTANCE,
+            "<?php" +
+                "/** @var $t \\PHPUnit\\Framework\\TestCase */\n" +
+                "$t->getMockClass(Foo::class)->b<caret>ar();",
+            PlatformPatterns.psiElement(Method.class).withName("bar")
+        );
+    }
+
     public void testResolveForLegacyPhpunitTestCaseMock() {
         assertPhpReferenceResolveTo(PhpFileType.INSTANCE,
             "<?php" +
@@ -69,10 +78,49 @@ public class MockProphecyTypeProviderTest extends PhpUnitLightCodeInsightFixture
         );
     }
 
+    public void testResolveForLegacyPhpunitTestCaseMockMethods() {
+        assertPhpReferenceResolveTo(PhpFileType.INSTANCE,
+            "<?php" +
+                "/** @var $t \\PHPUnit_Framework_TestCase */\n" +
+                "$t->getMock(Foo::class)->b<caret>ar();",
+            PlatformPatterns.psiElement(Method.class).withName("bar")
+        );
+
+        assertPhpReferenceResolveTo(PhpFileType.INSTANCE,
+            "<?php" +
+                "/** @var $t \\PHPUnit_Framework_TestCase */\n" +
+                "$t->getMockClass(Foo::class)->b<caret>ar();",
+            PlatformPatterns.psiElement(Method.class).withName("bar")
+        );
+
+        assertPhpReferenceResolveTo(PhpFileType.INSTANCE,
+            "<?php" +
+                "/** @var $t \\PHPUnit_Framework_TestCase */\n" +
+                "$t->getMockForAbstractClass(Foo::class)->b<caret>ar();",
+            PlatformPatterns.psiElement(Method.class).withName("bar")
+        );
+
+        assertPhpReferenceResolveTo(PhpFileType.INSTANCE,
+            "<?php" +
+                "/** @var $t \\PHPUnit_Framework_TestCase */\n" +
+                "$t->getMockForTrait(Foo::class)->b<caret>ar();",
+            PlatformPatterns.psiElement(Method.class).withName("bar")
+        );
+    }
+
     public void testResolveForProphecyMock() {
         assertPhpReferenceResolveTo(PhpFileType.INSTANCE,
             "<?php" +
                 "/** @var $t \\PHPUnit\\Framework\\TestCase */\n" +
+                "$t->prophesize(Foo::class)->b<caret>ar();",
+            PlatformPatterns.psiElement(Method.class).withName("bar")
+        );
+    }
+
+    public void testResolveForProphecyProphetMock() {
+        assertPhpReferenceResolveTo(PhpFileType.INSTANCE,
+            "<?php" +
+                "/** @var $t \\Prophecy\\Prophet */\n" +
                 "$t->prophesize(Foo::class)->b<caret>ar();",
             PlatformPatterns.psiElement(Method.class).withName("bar")
         );

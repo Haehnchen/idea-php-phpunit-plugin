@@ -76,4 +76,22 @@ public class SetUpTypeProviderTest extends PhpUnitLightCodeInsightFixtureTestCas
             PlatformPatterns.psiElement(Method.class).withName("getFoobar")
         );
     }
+
+    public void testThatSetUpTypesAreNotProvidedForNonTestClass() {
+        assertPhpReferenceNotResolveTo(PhpFileType.INSTANCE, "<?php" +
+                "    class FooBarService\n" +
+                "    {\n" +
+                "        public function setUp()\n" +
+                "        {\n" +
+                "            $this->fake = $this->createMock(\\Bar::class);\n" +
+                "        }\n" +
+                "\n" +
+                "        public function itShouldDoFoobar()\n" +
+                "        {\n" +
+                "            $this->fake->getFo<caret>obar();\n" +
+                "        }\n" +
+                "    }",
+            PlatformPatterns.psiElement(Method.class).withName("getFoobar")
+        );
+    }
 }
