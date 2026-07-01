@@ -291,7 +291,42 @@ PHPSTORM_ENV=skip ./gradlew test --tests "de.espend.idea.php.phpunit.utils.*"
 
 Commit each batch separately.
 
-## Slice 6: Inspections, Intentions, Line Markers, Icons, And Error Reporter
+## Slice 6: Remaining Utility Helpers
+
+Convert the remaining utility helpers after the type providers, before the higher side-effect IDE surfaces.
+
+Files:
+
+- `src/main/java/de/espend/idea/php/phpunit/utils/PatternUtil.java`
+- `src/main/java/de/espend/idea/php/phpunit/utils/PhpElementsUtil.java`
+- `src/main/java/de/espend/idea/php/phpunit/utils/PhpUnitPluginUtil.java`
+- `src/main/java/de/espend/idea/php/phpunit/utils/mockstring/MockStringPsiUtil.java`
+
+Important constraints:
+
+- Keep static Java-callable utility APIs compatible while Java callers still exist.
+- Preserve current null-return and string-normalization behavior.
+- Do not move write-action or PSI mutation behavior out of existing methods.
+- Keep mock-string PSI traversal behavior identical.
+
+Checks:
+
+```bash
+PHPSTORM_ENV=skip ./gradlew compileJava compileKotlin
+PHPSTORM_ENV=skip ./gradlew test --tests "de.espend.idea.php.phpunit.utils.*"
+PHPSTORM_ENV=skip ./gradlew test --tests "de.espend.idea.php.phpunit.completion.*"
+PHPSTORM_ENV=skip ./gradlew test --tests "de.espend.idea.php.phpunit.references.*"
+PHPSTORM_ENV=skip ./gradlew test --tests "de.espend.idea.php.phpunit.annotator.*"
+```
+
+Commit:
+
+```bash
+git add src/main
+git commit -m "Migrate remaining utility helpers to Kotlin"
+```
+
+## Slice 7: Inspections, Intentions, Line Markers, Icons, And Error Reporter
 
 Convert the highest side-effect surfaces last.
 
