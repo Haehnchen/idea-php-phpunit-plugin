@@ -14,7 +14,7 @@ class PhpUnitCompletionContributorTest : PhpUnitLightCodeInsightFixtureTestCase(
     }
 
     override fun getTestDataPath(): String {
-        return "src/test/java/de/espend/idea/php/phpunit/completion/fixtures"
+        return "src/test/kotlin/de/espend/idea/php/phpunit/completion/fixtures"
     }
 
     fun testThatChainingCreateMockProvidesMethodCompletion() {

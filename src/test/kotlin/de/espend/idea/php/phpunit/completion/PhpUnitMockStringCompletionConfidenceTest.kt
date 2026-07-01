@@ -14,7 +14,7 @@ class PhpUnitMockStringCompletionConfidenceTest : PhpUnitLightCodeInsightFixture
     }
 
     override fun getTestDataPath(): String {
-        return "src/test/java/de/espend/idea/php/phpunit"
+        return "src/test/kotlin/de/espend/idea/php/phpunit"
     }
 
     fun testShouldNotSkipAutopopupInsidePhpUnitStringParameter() {

@@ -16,7 +16,7 @@ class PhpUnitReferenceContributorTest : PhpUnitLightCodeInsightFixtureTestCase()
     }
 
     override fun getTestDataPath(): String {
-        return "src/test/java/de/espend/idea/php/phpunit/references/fixtures"
+        return "src/test/kotlin/de/espend/idea/php/phpunit/references/fixtures"
     }
 
     fun testThatReferencesForClassMethodAreProvided() {

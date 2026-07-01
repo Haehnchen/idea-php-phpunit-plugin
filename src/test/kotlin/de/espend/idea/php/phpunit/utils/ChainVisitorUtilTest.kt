@@ -18,7 +18,7 @@ class ChainVisitorUtilTest : PhpUnitLightCodeInsightFixtureTestCase() {
     }
 
     override fun getTestDataPath(): String {
-        return "src/test/java/de/espend/idea/php/phpunit/utils/fixtures"
+        return "src/test/kotlin/de/espend/idea/php/phpunit/utils/fixtures"
     }
 
     fun testThatChainingVariableIsResolved() {

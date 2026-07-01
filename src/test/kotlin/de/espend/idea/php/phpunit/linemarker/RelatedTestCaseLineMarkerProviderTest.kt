@@ -20,7 +20,7 @@ class RelatedTestCaseLineMarkerProviderTest : PhpUnitLightCodeInsightFixtureTest
     }
 
     override fun getTestDataPath(): String {
-        return "src/test/java/de/espend/idea/php/phpunit/linemarker/fixtures"
+        return "src/test/kotlin/de/espend/idea/php/phpunit/linemarker/fixtures"
     }
 
     fun testThatClassNameProvidesALineMarkerToItsTestCase() {

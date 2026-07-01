@@ -16,7 +16,7 @@ class GetMockTypeProviderTest : PhpUnitLightCodeInsightFixtureTestCase() {
     }
 
     override fun getTestDataPath(): String {
-        return "src/test/java/de/espend/idea/php/phpunit/type/fixtures"
+        return "src/test/kotlin/de/espend/idea/php/phpunit/type/fixtures"
     }
 
     fun testGetMockGeneratorProvidesNavigation() {
