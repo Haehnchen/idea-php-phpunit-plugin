@@ -29,9 +29,8 @@ public class PhpClassMethodReference extends PsiPolyVariantReferenceBase<PsiElem
         this.clazz = clazz;
     }
 
-    @NotNull
     @Override
-    public ResolveResult[] multiResolve(boolean b) {
+    public ResolveResult @NotNull [] multiResolve(boolean b) {
         Collection<ResolveResult> resolveResults = new ArrayList<>();
 
         for (PhpClass phpClass : PhpIndex.getInstance(getElement().getProject()).getAnyByFQN(this.clazz)) {
@@ -44,9 +43,8 @@ public class PhpClassMethodReference extends PsiPolyVariantReferenceBase<PsiElem
         return resolveResults.toArray(new ResolveResult[0]);
     }
 
-    @NotNull
     @Override
-    public Object[] getVariants() {
+    public Object @NotNull [] getVariants() {
         return new Object[0];
     }
 }

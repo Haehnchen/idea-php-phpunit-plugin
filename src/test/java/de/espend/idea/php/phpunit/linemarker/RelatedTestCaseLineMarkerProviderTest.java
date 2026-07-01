@@ -80,7 +80,7 @@ public class RelatedTestCaseLineMarkerProviderTest extends PhpUnitLightCodeInsig
         List<PsiElement> elements = collectPsiElementsRecursive(psiElement);
 
         for (LineMarkerProvider lineMarkerProvider : LineMarkerProviders.getInstance().allForLanguage(psiElement.getLanguage())) {
-            Collection<LineMarkerInfo<?>> lineMarkerInfos = new ArrayList<LineMarkerInfo<?>>();
+            Collection<LineMarkerInfo<?>> lineMarkerInfos = new ArrayList<>();
             lineMarkerProvider.collectSlowLineMarkers(elements, lineMarkerInfos);
 
             for (LineMarkerInfo<?> lineMarkerInfo : lineMarkerInfos) {
@@ -92,7 +92,7 @@ public class RelatedTestCaseLineMarkerProviderTest extends PhpUnitLightCodeInsig
     }
 
     private List<PsiElement> collectPsiElementsRecursive(PsiElement psiElement) {
-        List<PsiElement> elements = new ArrayList<PsiElement>();
+        List<PsiElement> elements = new ArrayList<>();
         elements.add(psiElement.getContainingFile());
 
         psiElement.acceptChildren(new PsiRecursiveElementVisitor() {

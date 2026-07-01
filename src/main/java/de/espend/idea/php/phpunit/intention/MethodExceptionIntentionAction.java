@@ -51,7 +51,7 @@ public class MethodExceptionIntentionAction extends PsiElementBaseIntentionActio
         }
 
         if (IntentionPreviewUtils.isPreviewElement(psiElement) || exceptions.size() == 1) {
-            PhpUnitPluginUtil.insertExpectedException(editor.getDocument(), method, psiElement, exceptions.iterator().next());
+            PhpUnitPluginUtil.insertExpectedException(method, psiElement, exceptions.iterator().next());
 
             return;
         }
@@ -64,7 +64,7 @@ public class MethodExceptionIntentionAction extends PsiElementBaseIntentionActio
                 psiElement.getProject(),
                 getText(),
                 "",
-                () -> PhpUnitPluginUtil.insertExpectedException(editor.getDocument(), method, psiElement, s),
+                () -> PhpUnitPluginUtil.insertExpectedException(method, psiElement, s),
                 psiElement.getContainingFile()
             ))
             .createPopup()

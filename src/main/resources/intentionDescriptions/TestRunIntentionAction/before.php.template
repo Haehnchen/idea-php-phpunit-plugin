@@ -1,0 +1,9 @@
+<?php
+
+class FooTest extends \PHPUnit\Framework\TestCase
+{
+    public function testFo<caret>o(): void
+    {
+        $this->assertTrue(true);
+    }
+}

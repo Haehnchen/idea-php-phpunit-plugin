@@ -56,14 +56,14 @@ public abstract class PhpUnitLightCodeInsightFixtureTestCase extends LightJavaCo
         final List<PsiElement> elements = collectPsiElementsRecursive(psiElement);
 
         for (LineMarkerProvider lineMarkerProvider : LineMarkerProviders.getInstance().allForLanguage(psiElement.getLanguage())) {
-            Collection<LineMarkerInfo> lineMarkerInfos = new ArrayList<LineMarkerInfo>();
+            Collection<LineMarkerInfo<?>> lineMarkerInfos = new ArrayList<>();
             lineMarkerProvider.collectSlowLineMarkers(elements, lineMarkerInfos);
 
             if(lineMarkerInfos.size() == 0) {
                 continue;
             }
 
-            for (LineMarkerInfo lineMarkerInfo : lineMarkerInfos) {
+            for (LineMarkerInfo<?> lineMarkerInfo : lineMarkerInfos) {
                 if(assertMatch.match(lineMarkerInfo)) {
                     return;
                 }
@@ -159,7 +159,7 @@ public abstract class PhpUnitLightCodeInsightFixtureTestCase extends LightJavaCo
     }
 
     public void assertLocalInspectionContains(String filename, String content, String contains) {
-        Set<String> matches = new HashSet<String>();
+        Set<String> matches = new HashSet<>();
 
         Pair<List<ProblemDescriptor>, Integer> localInspectionsAtCaret = getLocalInspectionsAtCaret(filename, content);
         for (ProblemDescriptor result : localInspectionsAtCaret.getFirst()) {
@@ -227,12 +227,12 @@ public abstract class PhpUnitLightCodeInsightFixtureTestCase extends LightJavaCo
 
     @NotNull
     private List<PsiElement> collectPsiElementsRecursive(@NotNull PsiElement psiElement) {
-        final List<PsiElement> elements = new ArrayList<PsiElement>();
+        final List<PsiElement> elements = new ArrayList<>();
         elements.add(psiElement.getContainingFile());
 
         psiElement.acceptChildren(new PsiRecursiveElementVisitor() {
             @Override
-            public void visitElement(PsiElement element) {
+            public void visitElement(@NotNull PsiElement element) {
                 elements.add(element);
                 super.visitElement(element);
             }
@@ -240,9 +240,10 @@ public abstract class PhpUnitLightCodeInsightFixtureTestCase extends LightJavaCo
         return elements;
     }
 
+    @SuppressWarnings("unused")
     public static class LineMarker {
         public interface Assert {
-            boolean match(@NotNull LineMarkerInfo markerInfo);
+            boolean match(@NotNull LineMarkerInfo<?> markerInfo);
         }
 
         public static class ToolTipEqualsAssert implements Assert {
@@ -254,7 +255,7 @@ public abstract class PhpUnitLightCodeInsightFixtureTestCase extends LightJavaCo
             }
 
             @Override
-            public boolean match(@NotNull LineMarkerInfo markerInfo) {
+            public boolean match(@NotNull LineMarkerInfo<?> markerInfo) {
                 return markerInfo.getLineMarkerTooltip() != null && markerInfo.getLineMarkerTooltip().equals(toolTip);
             }
         }

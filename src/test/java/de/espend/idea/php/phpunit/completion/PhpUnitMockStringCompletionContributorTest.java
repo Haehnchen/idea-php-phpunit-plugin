@@ -18,11 +18,13 @@ import java.util.stream.Collectors;
  * @see de.espend.idea.php.phpunit.completion.PhpUnitMockStringCompletionProvider
  */
 public class PhpUnitMockStringCompletionContributorTest extends PhpUnitLightCodeInsightFixtureTestCase {
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         myFixture.copyFileToProject("common/fixture/PhpUnitMockStringClasses.php");
     }
 
+    @Override
     public String getTestDataPath() {
         return "src/test/java/de/espend/idea/php/phpunit";
     }

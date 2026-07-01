@@ -1,0 +1,10 @@
+<?php
+
+class FooTest extends \PHPUnit\Framework\TestCase
+{
+    public function testFoo(): void
+    {
+        $foo = $this->createMock(Foo::class);
+        $foo<caret>;
+    }
+}

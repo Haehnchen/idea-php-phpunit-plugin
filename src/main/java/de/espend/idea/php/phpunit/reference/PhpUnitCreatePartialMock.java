@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PhpUnitCreatePartialMock {
     public static class Completion extends CompletionContributor {
+        @SuppressWarnings("unused")
         public Completion() {
             extend(CompletionType.BASIC, PlatformPatterns.psiElement().withParent(PatternUtil.getArrayParameterPattern()), new CompletionProvider<>() {
                 @Override

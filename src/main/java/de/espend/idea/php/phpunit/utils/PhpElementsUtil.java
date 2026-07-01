@@ -33,11 +33,11 @@ public class PhpElementsUtil {
      */
     public static String getClassConstantPhpFqn(@NotNull ClassConstantReference classConstant) {
         PhpExpression classReference = classConstant.getClassReference();
-        if(!(classReference instanceof PhpReference)) {
+        if(!(classReference instanceof PhpReference phpReference)) {
             return null;
         }
 
-        String typeName = ((PhpReference) classReference).getFQN();
+        String typeName = phpReference.getFQN();
         return StringUtils.isNotBlank(typeName) ? StringUtils.stripStart(typeName, "\\") : null;
     }
 
@@ -60,18 +60,18 @@ public class PhpElementsUtil {
             return null;
         }
 
-        if(psiElement instanceof StringLiteralExpression) {
-            String resolvedString = ((StringLiteralExpression) psiElement).getContents();
+        if(psiElement instanceof StringLiteralExpression stringLiteralExpression) {
+            String resolvedString = stringLiteralExpression.getContents();
             if(StringUtils.isEmpty(resolvedString)) {
                 return null;
             }
 
             return resolvedString;
-        } else if(psiElement instanceof Field) {
-            return getStringValue(((Field) psiElement).getDefaultValue(), depth);
-        } else if(psiElement instanceof ClassConstantReference && "class".equals(((ClassConstantReference) psiElement).getName())) {
+        } else if(psiElement instanceof Field field) {
+            return getStringValue(field.getDefaultValue(), depth);
+        } else if(psiElement instanceof ClassConstantReference classConstantReference && "class".equals(classConstantReference.getName())) {
             // Foobar::class
-            return getClassConstantPhpFqn((ClassConstantReference) psiElement);
+            return getClassConstantPhpFqn(classConstantReference);
         } else if(psiElement instanceof PhpReference) {
             PsiReference psiReference = psiElement.getReference();
             if(psiReference == null) {
@@ -83,15 +83,13 @@ public class PhpElementsUtil {
                 return getStringValue(psiElement, depth);
             }
 
-            if(ref instanceof Field) {
-                return getStringValue(((Field) ref).getDefaultValue());
+            if(ref instanceof Field field) {
+                return getStringValue(field.getDefaultValue());
             }
-        } else if(psiElement instanceof NewExpression){
-            return getNewExpressionPhpFqn((NewExpression) psiElement);
-        } else if(psiElement instanceof  ConcatenationExpression){
+        } else if(psiElement instanceof NewExpression newExpression){
+            return getNewExpressionPhpFqn(newExpression);
+        } else if(psiElement instanceof ConcatenationExpression concatenationExpression){
             // Allows creation method like: Mockery::mock(Dependency::class . "[calledMethod]");
-
-            ConcatenationExpression concatenationExpression = (ConcatenationExpression) psiElement;
             StringBuilder concatString = new StringBuilder();
 
             for(PsiElement e : concatenationExpression.getChildren()){
@@ -118,11 +116,11 @@ public class PhpElementsUtil {
         for (ResolveResult resolveResult : methodReference.multiResolve(false)) {
             PsiElement resolve = resolveResult.getElement();
 
-            if(!(resolve instanceof Method)) {
+            if(!(resolve instanceof Method method)) {
                 continue;
             }
 
-            PhpClass containingClass = ((Method) resolve).getContainingClass();
+            PhpClass containingClass = method.getContainingClass();
             if(containingClass == null) {
                 continue;
             }

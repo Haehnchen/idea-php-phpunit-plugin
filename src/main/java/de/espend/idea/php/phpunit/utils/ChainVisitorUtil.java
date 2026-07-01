@@ -32,24 +32,24 @@ public class ChainVisitorUtil {
             return;
         }
 
-        if(psiElement instanceof MethodReference) {
-            if(!processor.process((MethodReference) psiElement)) {
+        if(psiElement instanceof MethodReference methodReference) {
+            if(!processor.process(methodReference)) {
                 return;
             }
 
             visit(psiElement.getFirstChild(), processor, --depth);
-        } else if(psiElement instanceof FieldReference) {
-            PhpPsiElement phpPsiElement = resolveField((FieldReference) psiElement);
-            if(phpPsiElement instanceof MethodReference) {
-                if(!processor.process((MethodReference) phpPsiElement)) {
+        } else if(psiElement instanceof FieldReference fieldReference) {
+            PhpPsiElement phpPsiElement = resolveField(fieldReference);
+            if(phpPsiElement instanceof MethodReference methodReference) {
+                if(!processor.process(methodReference)) {
                     return;
                 }
 
                 visit(phpPsiElement.getFirstChild(), processor, --depth);
             }
-        } else if(psiElement instanceof Variable && !((Variable) psiElement).isDeclaration()) {
-            for (PhpPsiElement phpPsiElement : resolveVariable((Variable) psiElement)) {
-                if(phpPsiElement instanceof MethodReference && !processor.process((MethodReference) phpPsiElement)) {
+        } else if(psiElement instanceof Variable variable && !variable.isDeclaration()) {
+            for (PhpPsiElement phpPsiElement : resolveVariable(variable)) {
+                if(phpPsiElement instanceof MethodReference methodReference && !processor.process(methodReference)) {
                     return;
                 }
 
@@ -79,11 +79,11 @@ public class ChainVisitorUtil {
             }
 
             PsiElement parent = variable1.getParent();
-            if(!(parent instanceof AssignmentExpression)) {
+            if(!(parent instanceof AssignmentExpression assignmentExpression)) {
                 continue;
             }
 
-            PhpPsiElement value = ((AssignmentExpression) parent).getValue();
+            PhpPsiElement value = assignmentExpression.getValue();
             if(value == null) {
                 continue;
             }
@@ -129,8 +129,8 @@ public class ChainVisitorUtil {
     private static Function getNonClosureFunction(@NotNull PsiElement psiElement) {
         PsiElement parent = PsiTreeUtil.getStubOrPsiParent(psiElement);
         while (parent != null) {
-            if (parent instanceof Function && !((Function) parent).isClosure()) {
-                return (Function) parent;
+            if (parent instanceof Function function && !function.isClosure()) {
+                return function;
             }
 
             if (parent instanceof PsiFile) {

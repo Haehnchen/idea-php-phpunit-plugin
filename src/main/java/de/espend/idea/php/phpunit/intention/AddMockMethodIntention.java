@@ -143,24 +143,8 @@ public class AddMockMethodIntention extends PsiElementBaseIntentionAction implem
         return true;
     }
 
-    private static class MyMockWriteCommand implements Runnable {
-        @NotNull
-        private final Editor editor;
-
-        @NotNull
-        private final Collection<String> selectedValues;
-
-        @NotNull
-        private final PsiElement psiElement;
-        private final boolean jumpToLastElement;
-
-        private MyMockWriteCommand(@NotNull Editor editor, @NotNull Collection<String> selectedValues, @NotNull PsiElement psiElement, boolean jumpToLastElement) {
-            this.editor = editor;
-            this.selectedValues = selectedValues;
-            this.psiElement = psiElement;
-            this.jumpToLastElement = jumpToLastElement;
-        }
-
+    private record MyMockWriteCommand(@NotNull Editor editor, @NotNull Collection<String> selectedValues, @NotNull PsiElement psiElement, boolean jumpToLastElement) implements Runnable {
+        @Override
         public void run() {
             Statement statement = PsiTreeUtil.getParentOfType(psiElement, Statement.class);
             if(statement == null) {
@@ -191,7 +175,7 @@ public class AddMockMethodIntention extends PsiElementBaseIntentionAction implem
                 statement.add(PhpPsiElementFactory.createNewLine(project));
             }
 
-            if (this.jumpToLastElement && elementJumpTo != null) {
+            if (jumpToLastElement && elementJumpTo != null) {
                 for (MethodReference reference : PsiTreeUtil.getChildrenOfTypeAsList(elementJumpTo, MethodReference.class)) {
                     if(!"willReturn".equals(reference.getName())) {
                         continue;

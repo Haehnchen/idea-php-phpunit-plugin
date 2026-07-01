@@ -9,11 +9,13 @@ import org.jetbrains.annotations.NotNull;
  * @see de.espend.idea.php.phpunit.completion.PhpUnitMockStringCompletionConfidence
  */
 public class PhpUnitMockStringCompletionConfidenceTest extends PhpUnitLightCodeInsightFixtureTestCase {
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         myFixture.copyFileToProject("common/fixture/PhpUnitMockStringClasses.php");
     }
 
+    @Override
     public String getTestDataPath() {
         return "src/test/java/de/espend/idea/php/phpunit";
     }

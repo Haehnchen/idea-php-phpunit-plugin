@@ -10,11 +10,13 @@ import de.espend.idea.php.phpunit.PhpUnitLightCodeInsightFixtureTestCase;
  * @see de.espend.idea.php.phpunit.reference.PhpUnitCreatePartialMock
  */
 public class PhpUnitCreatePartialMockTest extends PhpUnitLightCodeInsightFixtureTestCase {
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         myFixture.copyFileToProject("PhpUnitCreatePartialMock.php");
     }
 
+    @Override
     public String getTestDataPath() {
         return "src/test/java/de/espend/idea/php/phpunit/references/fixtures";
     }

@@ -1,0 +1,9 @@
+<?php
+
+class FooTest extends \PHPUnit\Framework\TestCase
+{
+    public function testFoo(): void
+    {
+        $foo = new Foo($this->createMock(Bar::class));
+    }
+}

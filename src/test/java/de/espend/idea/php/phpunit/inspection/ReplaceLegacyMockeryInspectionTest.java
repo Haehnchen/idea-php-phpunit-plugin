@@ -9,6 +9,7 @@ import java.util.List;
 
 public class ReplaceLegacyMockeryInspectionTest extends LightJavaCodeInsightFixtureTestCase {
 
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         myFixture.copyFileToProject("common/fixture/MockeryClasses.php");

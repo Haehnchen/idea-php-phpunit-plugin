@@ -6,16 +6,16 @@ import com.intellij.psi.PsiElement;
 import com.intellij.usageView.UsageInfo;
 import com.jetbrains.php.lang.psi.PhpPsiElementFactory;
 import de.espend.idea.php.phpunit.PhpUnitLightCodeInsightFixtureTestCase;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Collection;
 
 public class MockeryFindUsagesProviderTest extends PhpUnitLightCodeInsightFixtureTestCase {
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         myFixture.copyFileToProject("common/fixture/MockeryClasses.php");
     }
 
+    @Override
     public String getTestDataPath() {
         return "src/test/java/de/espend/idea/php/phpunit";
     }
@@ -23,6 +23,7 @@ public class MockeryFindUsagesProviderTest extends PhpUnitLightCodeInsightFixtur
     protected void doTest(String targetFileName, int numberOfUsages) {
         myFixture.configureByFile("common/fixture/renamingandusage/" + targetFileName);
         Collection<UsageInfo> usageInfos = myFixture.findUsages(myFixture.getElementAtCaret());
+        assertEquals(numberOfUsages, usageInfos.size());
 
         for (UsageInfo usage : usageInfos) {
             TextRange range = usage.getRangeInElement();

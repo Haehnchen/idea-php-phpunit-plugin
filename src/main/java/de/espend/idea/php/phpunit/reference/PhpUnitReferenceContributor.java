@@ -18,9 +18,8 @@ public class PhpUnitReferenceContributor extends PsiReferenceContributor {
         psiReferenceRegistrar.registerReferenceProvider(
             PatternUtil.getMethodReferenceWithParameterPattern(),
             new PsiReferenceProvider() {
-                @NotNull
                 @Override
-                public PsiReference[] getReferencesByElement(@NotNull PsiElement psiElement, @NotNull ProcessingContext processingContext) {
+                public PsiReference @NotNull [] getReferencesByElement(@NotNull PsiElement psiElement, @NotNull ProcessingContext processingContext) {
                     if(psiElement instanceof StringLiteralExpression) {
                         String contents = ((StringLiteralExpression) psiElement).getContents();
                         if(StringUtils.isNotBlank(contents)) {

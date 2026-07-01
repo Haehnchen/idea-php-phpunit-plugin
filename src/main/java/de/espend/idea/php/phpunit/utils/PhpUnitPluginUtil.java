@@ -1,28 +1,20 @@
 package de.espend.idea.php.phpunit.utils;
 
-import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.execution.ProgramRunnerUtil;
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.actions.ConfigurationFromContext;
 import com.intellij.execution.actions.RunConfigurationProducer;
 import com.intellij.execution.executors.DefaultDebugExecutor;
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.completion.PhpLookupElement;
-import com.jetbrains.php.lang.documentation.phpdoc.lexer.PhpDocTokenTypes;
-import com.jetbrains.php.lang.documentation.phpdoc.psi.PhpDocComment;
-import com.jetbrains.php.lang.documentation.phpdoc.psi.tags.PhpDocTag;
-import com.jetbrains.php.lang.psi.PhpFile;
 import com.jetbrains.php.lang.psi.PhpPsiElementFactory;
 import com.jetbrains.php.lang.psi.elements.*;
 import com.jetbrains.php.phpunit.PhpUnitRuntimeConfigurationProducer;
@@ -149,7 +141,7 @@ public class PhpUnitPluginUtil {
     /**
      * Insert "expectException" for given scope (eg method)
      */
-    public static void insertExpectedException(@NotNull Document document, @NotNull Function function, @NotNull PsiElement psiElement, @NotNull String exceptionClass) {
+    public static void insertExpectedException(@NotNull Function function, @NotNull PsiElement psiElement, @NotNull String exceptionClass) {
         String fqn = "\\" + StringUtils.stripStart(exceptionClass, "\\");
 
         // add scope

@@ -2,7 +2,6 @@ package de.espend.idea.php.phpunit.linemarker;
 
 import com.intellij.codeInsight.daemon.LineMarkerInfo;
 import com.intellij.codeInsight.daemon.LineMarkerProvider;
-import com.intellij.codeInsight.daemon.RelatedItemLineMarkerInfo;
 import com.intellij.codeInsight.navigation.NavigationGutterIconBuilder;
 import com.intellij.psi.PsiElement;
 import com.jetbrains.php.PhpIcons;
@@ -24,7 +23,7 @@ import java.util.*;
 public class RelatedTestCaseLineMarkerProvider implements LineMarkerProvider {
     @Nullable
     @Override
-    public LineMarkerInfo getLineMarkerInfo(@NotNull PsiElement element) {
+    public LineMarkerInfo<?> getLineMarkerInfo(@NotNull PsiElement element) {
         return null;
     }
 
@@ -91,7 +90,7 @@ public class RelatedTestCaseLineMarkerProvider implements LineMarkerProvider {
     private static Collection<String> getTestClassesViaPath(@NotNull String className) {
         List<String> classNameParts = Arrays.asList(className.split("\\\\"));
 
-        classNameParts.set(classNameParts.size() - 1, classNameParts.get(classNameParts.size() - 1) + "Test");
+        classNameParts.set(classNameParts.size() - 1, classNameParts.getLast() + "Test");
 
         Collection<String> testClasses = new HashSet<>();
         testClasses.add(className + "Test");

@@ -14,11 +14,13 @@ import org.jetbrains.annotations.Nullable;
  * @see de.espend.idea.php.phpunit.utils.ChainVisitorUtil
  */
 public class ChainVisitorUtilTest extends PhpUnitLightCodeInsightFixtureTestCase {
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         myFixture.copyFileToProject("ChainVisitorUtil.php");
     }
 
+    @Override
     public String getTestDataPath() {
         return "src/test/java/de/espend/idea/php/phpunit/utils/fixtures";
     }

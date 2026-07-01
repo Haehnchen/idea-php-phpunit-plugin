@@ -10,7 +10,6 @@ import com.jetbrains.php.completion.PhpLookupElement;
 import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression;
-import de.espend.idea.php.phpunit.reference.MockeryReferenceContributor;
 import de.espend.idea.php.phpunit.utils.MockeryReferencingUtil;
 import de.espend.idea.php.phpunit.utils.PatternUtil;
 import org.jetbrains.annotations.NotNull;
@@ -111,4 +110,3 @@ public class MockeryCompletionContributor extends CompletionContributor {
         void accept(T t, U u, V v);
     }
 }
-

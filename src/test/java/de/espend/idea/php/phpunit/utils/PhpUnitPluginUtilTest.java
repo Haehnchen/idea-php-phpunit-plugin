@@ -1,8 +1,6 @@
 package de.espend.idea.php.phpunit.utils;
 
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.editor.Document;
-import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -45,10 +43,9 @@ public class PhpUnitPluginUtilTest extends PhpUnitLightCodeInsightFixtureTestCas
 
         PsiElement psiElement = myFixture.getFile().findElementAt(myFixture.getCaretOffset());
 
-        Document document = PsiDocumentManager.getInstance(getProject()).getDocument(psiFile);
         Function function = PsiTreeUtil.findChildOfType(psiFile, Function.class);
 
-        WriteCommandAction.runWriteCommandAction(getProject(), () -> PhpUnitPluginUtil.insertExpectedException(document, function, psiElement, "Foobar\\Foobar"));
+        WriteCommandAction.runWriteCommandAction(getProject(), () -> PhpUnitPluginUtil.insertExpectedException(function, psiElement, "Foobar\\Foobar"));
 
         String text = psiFile.getText();
 

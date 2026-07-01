@@ -133,26 +133,7 @@ public class ConstructorMockIntention extends PsiElementBaseIntentionAction impl
     /**
      * new Foobar($this->createMock(Foobar::class))
      */
-    private static class MyConstructorCommandActionArgument implements Runnable {
-        @NotNull
-        private final PsiElement scope;
-
-        @Nullable
-        private final ParameterList parameterList;
-
-        @NotNull
-        private final Method method;
-
-        @NotNull
-        private final NewExpression newExpression;
-
-        private MyConstructorCommandActionArgument(@NotNull PsiElement scope, @Nullable ParameterList parameterList, @NotNull Method method, @NotNull NewExpression newExpression) {
-            this.scope = scope;
-            this.parameterList = parameterList;
-            this.method = method;
-            this.newExpression = newExpression;
-        }
-
+    private record MyConstructorCommandActionArgument(@NotNull PsiElement scope, @Nullable ParameterList parameterList, @NotNull Method method, @NotNull NewExpression newExpression) implements Runnable {
         @Override
         public void run() {
             // current parameter state

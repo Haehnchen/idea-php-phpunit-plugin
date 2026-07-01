@@ -4,11 +4,13 @@ import com.jetbrains.php.lang.PhpFileType;
 import de.espend.idea.php.phpunit.PhpUnitLightCodeInsightFixtureTestCase;
 
 public class MockeryCompletionContributorTest extends PhpUnitLightCodeInsightFixtureTestCase {
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         myFixture.copyFileToProject("common/fixture/MockeryClasses.php");
     }
 
+    @Override
     public String getTestDataPath() {
         return "src/test/java/de/espend/idea/php/phpunit";
     }

@@ -29,10 +29,10 @@ public class MockeryReferenceContributor extends PsiReferenceContributor {
                 MockeryReferenceContributor::processParametersAsClasses),
         PARTIAL_STRING(PatternUtil.getMethodReferenceWithParameterPattern(),
                 MockeryReferencingUtil::findMockeryMockParametersOnPartialMockStringDeclarationScope,
-                MockeryReferenceContributor::processParametersAsClassAndMethodNames),
+                (psiElement, contents, mockCreationParameters) -> processParametersAsClassAndMethodNames(psiElement, mockCreationParameters)),
         PARTIAL_CONCATENATION(PatternUtil.getMethodReferenceWithConcatenationPattern(),
                 MockeryReferencingUtil::findMockeryMockParametersOnPartialMockConcatenationDeclarationScope,
-                MockeryReferenceContributor::processParametersAsClassAndMethodNames);
+                (psiElement, contents, mockCreationParameters) -> processParametersAsClassAndMethodNames(psiElement, mockCreationParameters));
         ;
 
         private final PsiElementPattern.Capture<StringLiteralExpression> psiElementPattern;
@@ -92,9 +92,8 @@ public class MockeryReferenceContributor extends PsiReferenceContributor {
     @NotNull
     private PsiReferenceProvider getProvider(Scope scope) {
         return new PsiReferenceProvider() {
-            @NotNull
             @Override
-            public PsiReference[] getReferencesByElement(@NotNull PsiElement psiElement, @NotNull ProcessingContext processingContext) {
+            public PsiReference @NotNull [] getReferencesByElement(@NotNull PsiElement psiElement, @NotNull ProcessingContext processingContext) {
                 if (psiElement instanceof StringLiteralExpression) {
                     String contents = ((StringLiteralExpression) psiElement).getContents();
                     if (StringUtils.isNotBlank(contents)) {
@@ -120,7 +119,7 @@ public class MockeryReferenceContributor extends PsiReferenceContributor {
         return references.toArray(new PsiReference[0]);
     }
 
-    private static PsiReference[] processParametersAsClassAndMethodNames(PsiElement psiElement, String contents, String[] mockCreationParameters) {
+    private static PsiReference[] processParametersAsClassAndMethodNames(PsiElement psiElement, String[] mockCreationParameters) {
         if (mockCreationParameters == null || mockCreationParameters.length <= 1) {
             return new PsiReference[0];
         }

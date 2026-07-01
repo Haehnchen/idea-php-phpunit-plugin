@@ -8,11 +8,13 @@ import de.espend.idea.php.phpunit.PhpUnitLightCodeInsightFixtureTestCase;
  * @see de.espend.idea.php.phpunit.intention.TestRunIntentionAction
  */
 public class TestRunIntentionActionTest extends PhpUnitLightCodeInsightFixtureTestCase {
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         myFixture.copyFileToProject("classes.php");
     }
 
+    @Override
     public String getTestDataPath() {
         return "src/test/java/de/espend/idea/php/phpunit/intention/fixtures";
     }

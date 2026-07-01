@@ -1,20 +1,12 @@
 package de.espend.idea.php.phpunit.completion;
 
 import com.intellij.codeInsight.completion.*;
-import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
-import com.jetbrains.php.PhpIndex;
-import com.jetbrains.php.completion.PhpLookupElement;
-import com.jetbrains.php.lang.psi.elements.Method;
-import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression;
 import de.espend.idea.php.phpunit.utils.PatternUtil;
 import de.espend.idea.php.phpunit.utils.PhpUnitPluginUtil;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * @author Daniel Espendiller <daniel@espendiller.net>
